@@ -1,0 +1,95 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="well">
+    <table class="detail-table">
+        <thead>
+            <th>Business Details</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Business Name:</td>
+            <td>{{ result.nm_name }}</td>
+            <td>Citizenship/State Inc:</td>
+            <td>{{ domesticity.domesticity }}</td>
+        </tr>
+        <tr>
+            <td>Business ID:</td>
+            <td>{{ result.id_bus }}</td>
+            <td>Last Report Filed Year:</td>
+            <td>&mdash;</td>
+        </tr>
+        <tr>
+            <td>Business Address:</td>
+            <td>{{ result.address }}</td>
+            {% if domesticity.type %}
+            <td>Business Type:</td>
+            <td>{{ domesticity.type }}</td>
+            {% else %}
+            <td></td>
+            <td></td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td>Mailing Address:</td>
+            <td>{{ result.mailing_address }}</td>
+            <td>Business Status: </td>
+            <td>{{ result.status }}</td>
+        </tr>
+        <tr>
+            <td>Date Inc/Registration:</td>
+            <td>{{ result.dt_origin | simpledate }}</td>
+            {% if domesticity.category %}
+            <td>Category</td>
+            <td>{{ domesticity.category }}</td>
+            {% else %}
+            <td></td>
+            <td></td>
+            {% endif %}
+        </tr>
+        </tbody>
+    </table>
+    <table class="principals">
+        <thead>
+            <tr>
+                <th>Principals Details</th>
+            </tr>
+            <tr>
+                <th>Name/Title</th>
+                <th>Business Address</th>
+                <th>Residence Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for principal in principals %}
+                <tr>
+                    <td>{{ principal.nm_name }} {{ principal.tx_title }}</td>
+                    <td>{{ principal.business_address }}</td>
+                    <td>{{ principal.res_address }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- /.principals -->
+    <table class="agents">
+        <thead>
+            <tr>
+                <th>Agent Summary</th>
+            </tr>
+            <tr>
+                <th>Agent Name</th>
+                <th>Agent Business Address</th>
+                <th>Agent Residence Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ result.nm_agt }}</td>
+                <td>{{ result.agent_bus_address }}</td>
+                <td>{{ result.agent_res_address }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- /.agents -->
+</div>
+{% endblock %}}

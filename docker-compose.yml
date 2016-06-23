@@ -1,37 +1,37 @@
-web:
-  restart: always
-  build: ./web
-  expose:
-    - "8000"
-  links:
-    - postgres:postgres
-  volumes:
-    - /usr/src/app/static
-  env_file: .env
-  command: /usr/local/bin/gunicorn -w 2 -b :8000 app:app
+version: '2'
 
-nginx:
-  restart: always
-  build: ./nginx/
-  ports:
-    - "80:80"
-  volumes:
-    - /www/static
-  volumes_from:
-    - web
-  links:
-    - web:web
+services:
+  web:
+  #  restart: always
+    build: ./web
+    expose:
+      - "8000"
+#    ports:
+#      - "8000:5000"
+    external_links:
+      - sotsdbcontainer_db_1:db
+    networks:
+      - default
+    volumes:
+      - /usr/src/app/static
+    env_file: .env
+    command: /usr/local/bin/gunicorn -w 2 -b :8000 runserver:app
 
-data:
-  image: postgres:latest
-  volumes:
-    - /var/lib/postgresql
-  command: "true"
+  nginx:
+  #  restart: always
+    build: ./nginx/
+    networks:
+      - default
+    ports:
+      - "5000:5000"
+    volumes:
+      - /www/static
+    volumes_from:
+      - web
+    links:
+      - web:web
 
-postgres:
-  restart: always
-  image: mdillon/postgis:9.5
-  volumes_from:
-    - data
-  ports:
-    - "5432:5432"
+networks:
+  default:
+    external:
+      name: sotsdbcontainer_default

@@ -8,6 +8,3 @@ db = SQLAlchemy(app)
 
 from sots.models import *
 from sots.views import *
-
-if __name__ == "__main__":
-    app.run(debug=True)

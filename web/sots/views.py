@@ -1,10 +1,12 @@
 from sots import app, db
 from flask import render_template,  redirect, url_for
 from sqlalchemy import func
-from sots.models import FullTextIndex, BusMaster, Principal, Status, Subtype, Corp, DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther
+from sots.models import FullTextIndex, BusMaster, Principal, Status, Subtype, Corp, DomLmtCmpy, ForLmtCmpy, \
+    ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust
 from sots.forms import SearchForm
 from sots.config import BaseConfig as ConfigObject
 from sots.helpers import corp_type_lookup, origin_lookup, category_lookup
+from sots.helpers import check_empty as check_none
 
 
 def corp_domesticity(bus_id):
@@ -39,9 +41,9 @@ def for_lmt_part_domesticity(bus_id):
 
 def for_stat_trust_domesticity(bus_id):
     r = ForStatTrust.query.filter(ForStatTrust.id_bus == str(bus_id)).first()
-    return "Foreign / {}".format(r.cd_pl_of_form)
+    return {'domesticity': "Foreign / {}".format(r.cd_pl_of_form), 'type':None, 'category':None}
 
-def gen_part_domestictity(bus_id):
+def gen_part_domesticity(bus_id):
     return {'domesticity': "", 'type':None, 'category':None}
 
 def other_domesticity(bus_id):
@@ -66,7 +68,7 @@ def domesticity_lookup(bus_id, subtype):
                          'J': for_lmt_liab_part_domesticity,
                          'F': for_lmt_part_domesticity,
                          'M': for_stat_trust_domesticity,
-                         'K': gen_part_domestictity,
+                         'K': gen_part_domesticity,
                          'O': other_domesticity}
     lookup = type_table_lookup[subtype]
     return lookup(bus_id)
@@ -86,7 +88,10 @@ def search_results(query, page=1):
 @app.route('/business/<id>', methods=['GET'])
 def detail(id):
     result = BusMaster.query.filter(BusMaster.id_bus == str(id)).first()
-    domesticity = domesticity_lookup(result.id_bus, result.cd_subtype)
+    try:
+        domesticity = domesticity_lookup(result.id_bus, result.cd_subtype)
+    except AttributeError:
+        return redirect(url_for('index'))
     principals = Principal.query.filter(Principal.id_bus == str(id)).all()
     return render_template('results_detail.html', result=result,  principals=principals, domesticity=domesticity)
 
@@ -98,14 +103,10 @@ def index():
     return render_template('index.html', form=form)
 
 
-@app.template_filter('checknone')
-def check_none(value, default='', post=', '):
-    if value is None:
-        return default
-    elif len(value) == 0:
-        return default
-    else:
-        return "{}{}".format(value, post)
+
+# Filters for Jinja
+app.template_filter('checknone')(check_none)
+
 
 @app.template_filter('simpledate')
 def simple_date(value, format='%b %d, %Y'):

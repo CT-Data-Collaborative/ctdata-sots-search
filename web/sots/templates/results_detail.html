@@ -49,6 +49,7 @@
         </tr>
         </tbody>
     </table>
+    {% if principals %}
     <table class="principals">
         <thead>
             <tr>
@@ -70,6 +71,9 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <H2>NO PRINCIPALS</H2>
+    {% endif %}
     <!-- /.principals -->
     <table class="agents">
         <thead>

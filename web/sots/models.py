@@ -40,15 +40,9 @@ class FullTextIndex(db.Model):
         city = check_empty(self.ad_city)
         state = check_empty(self.ad_st, default='', post=' ')
         zipcode = check_empty(self.ad_zip5, default='', post=' ')
-        country = check_empty(self.ad_cntry)
+        country = check_empty(self.ad_cntry, default='', post='')
         return "{}{}{}{}{}{}{}".format(st1, st2, st3, city, state, zipcode, country)
 
-    def __repr__(self):
-        return "<FTI(table='{}', index='{}', search_type='{}', id_bus='{}' name='{}')>".format(self.table_name,
-                                                                                               self.index_name,
-                                                                                               self.search_type,
-                                                                                               self.id_bus,
-                                                                                               self.nm_name)
 
 class BusMaster(db.Model):
     __tablename__ = 'bus_master'
@@ -72,7 +66,7 @@ class BusMaster(db.Model):
         city = check_empty(self.ad_city)
         state = check_empty(self.ad_st, default='', post=' ')
         zipcode = check_empty(self.ad_zip5, default='', post=' ')
-        country = check_empty(self.ad_cntry, default='', post=' ')
+        country = check_empty(self.ad_cntry, default='', post='')
         return "{}{}{}{}{}{}{}".format(st1, st2, st3, city, state, zipcode, country)
 
 
@@ -110,7 +104,7 @@ class BusMaster(db.Model):
         return "{}{}{}{}{}{}{}".format(st1, st2, st3, city, state, zipcode, country)
 
     def __repr__(self):
-        return "<BUS_MASTER(id='{}', name='{}', date_of_origin='{}')".format(self.id_bus, self.nm_name, self.dt_origin)
+        return "<BUS_MASTER(id='{}', name='{}', date_of_origin='{}')>".format(self.id_bus, self.nm_name, self.dt_origin)
 
 class BusFiling(db.Model):
     __tablename__ = 'bus_filing'

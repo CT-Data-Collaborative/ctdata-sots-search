@@ -1,8 +1,8 @@
 from sots import app, db
 from flask import render_template,  redirect, url_for
 from sqlalchemy import func
-from sots.models import FullTextIndex, BusMaster, Principal, Status, Subtype, Corp, DomLmtCmpy, ForLmtCmpy, \
-    ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust
+from sots.models import FullTextIndex, BusMaster, Principal, Status, Subtype, Corp, \
+    DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust
 from sots.forms import SearchForm
 from sots.config import BaseConfig as ConfigObject
 from sots.helpers import corp_type_lookup, origin_lookup, category_lookup
@@ -17,7 +17,9 @@ def corp_domesticity(bus_id):
         domesticity = 'Domestic'
     place_of_formation = r.cd_pl_of_form
     type = corp_type_lookup[r.cd_bus_type]
-    return {'domesticity': "{} / {}".format(domesticity, place_of_formation), 'type':type, 'category':None}
+    return {'domesticity': "{} / {}".format(domesticity, place_of_formation),
+            'type':type,
+            'category':None}
 
 def dom_domesticity(bus_id):
     return {'domesticity': "Domestic / CT",'type': None, 'category':None}
@@ -25,7 +27,9 @@ def dom_domesticity(bus_id):
 def for_lmt_liab_cmpy_domesticity(bus_id):
     r = ForLmtCmpy.query.filter(ForLmtCmpy.id_bus == str(bus_id)).first()
     place_of_formation = r.cd_pl_of_form
-    return {'domesticity': "Foreign / {}".format(place_of_formation), 'type': None, 'category': None }
+    return {'domesticity': "Foreign / {}".format(place_of_formation),
+            'type': None,
+            'category': None }
 
 def for_lmt_liab_part_domesticity(bus_id):
     # TODO Address data loading issues with this table. Currently 0 rows
@@ -41,7 +45,9 @@ def for_lmt_part_domesticity(bus_id):
 
 def for_stat_trust_domesticity(bus_id):
     r = ForStatTrust.query.filter(ForStatTrust.id_bus == str(bus_id)).first()
-    return {'domesticity': "Foreign / {}".format(r.cd_pl_of_form), 'type':None, 'category':None}
+    return {'domesticity': "Foreign / {}".format(r.cd_pl_of_form),
+            'type':None,
+            'category':None}
 
 def gen_part_domesticity(bus_id):
     return {'domesticity': "", 'type':None, 'category':None}
@@ -75,14 +81,14 @@ def domesticity_lookup(bus_id, subtype):
 
 
 
-@app.route('/search_results/<query>', methods=['GET'])
-@app.route('/search_results/<query>/<int:page>', methods=['GET'])
-def search_results(query, page=1):
-    tq = func.plainto_tsquery('english', query)
-    results = FullTextIndex.query. \
-        filter(FullTextIndex.document.op('@@')(tq)).paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
 
-    return render_template('results.html', query=query, results=results)
+@app.route('/search_results/<type>/<query>/<int:page>', methods=['GET'])
+def search_results(type, query, page=1):
+    tq = func.plainto_tsquery('english', query)
+    results = FullTextIndex.query.filter(FullTextIndex.index_name == type).\
+        filter(FullTextIndex.document.op('@@')(tq)).\
+        paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
+    return render_template('results.html', query=query, type=type, results=results)
 
 
 @app.route('/business/<id>', methods=['GET'])
@@ -93,13 +99,19 @@ def detail(id):
     except AttributeError:
         return redirect(url_for('index'))
     principals = Principal.query.filter(Principal.id_bus == str(id)).all()
-    return render_template('results_detail.html', result=result,  principals=principals, domesticity=domesticity)
+    return render_template('results_detail.html',
+                           result=result,
+                           principals=principals,
+                           domesticity=domesticity)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = SearchForm()
     if form.validate_on_submit():
-        return redirect(url_for('search_results', query=form.search_term.data, page=1))
+        return redirect(url_for('search_results',
+                                query=form.search_term.data,
+                                type=form.choice.data,
+                                page=1))
     return render_template('index.html', form=form)
 
 

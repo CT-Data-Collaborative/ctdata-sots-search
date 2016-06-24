@@ -4,12 +4,16 @@ from flask import url_for
 from sots import app
 from sots.views import check_none, simple_date, corp_domesticity, dom_domesticity, for_lmt_liab_cmpy_domesticity, \
     for_lmt_liab_part_domesticity, for_lmt_part_domesticity, for_stat_trust_domesticity, gen_part_domesticity, \
-    other_domesticity, domesticity_lookup
+    other_domesticity, domesticity_lookup, search_results
 from sots.models import FullTextIndex, BusMaster
+from sots.forms import SearchForm
 from datetime import datetime
 from urllib.parse import urlparse
+from wtforms import SelectField
+from werkzeug.debug import DebuggedApplication
 
-
+app.wsgi_app = DebuggedApplication(app.wsgi_app, False
+                                   )
 @pytest.fixture
 def client(request):
     app.config['WTF_CSRF_ENABLED'] = False
@@ -78,8 +82,24 @@ def test_simple_date_custom_format():
 
 def test_search_form_submit(client):
     """ Do we get back a valid result including a redirect"""
-    rv = client.post('/', data={'search_term': '342sdfjkl;ajs'}, follow_redirects=True)
+    form_data = {'search_term': '342sdfjkl;ajs', 'choice': 'bus_name'}
+    rv = client.post('/', data= form_data, follow_redirects=True)
     assert rv.status_code == 200
+
+def test_search_form_fields(client):
+    with app.test_request_context():
+        f = SearchForm()
+        assert f.data == {'search_term': None, 'choice': 'None'}
+        assert isinstance(f.choice, SelectField)
+
+def test_search_form_live_data(client):
+    """ Do we get back a valid result including a redirect"""
+    with app.test_request_context():
+        form_data = {'search_term': 'r.c. bigelow', 'choice': 'business_name'}
+        rv = client.post('/', data=form_data, follow_redirects=False)
+        assert rv.status_code == 302
+        expected = url_for('search_results', query='r.c. bigelow', type='business_name', page=1)
+        assert urlparse(rv.location).path == expected
 
 ##########################################################################################
 #
@@ -92,13 +112,10 @@ def test_search_form_submit(client):
 #
 ##########################################################################################
 
-def test_search_form_live_data(client):
-    """ Do we get back a valid result including a redirect"""
+def test_search_type_processing(client):
     with app.test_request_context():
-        rv = client.post('/', data={'search_term': 'r.c. bigelow'}, follow_redirects=False)
-        assert rv.status_code == 302
-        expected = url_for('search_results', query='r.c. bigelow') + '/1'
-        assert urlparse(rv.location).path == expected
+        page = search_results(query='r.c. bigelow', page=1,type = 'bus_name')
+        assert isinstance(page, str)
 
 def test_bus_id_lookup(client):
     rv = client.get('/business/0038096')

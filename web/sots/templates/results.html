@@ -31,11 +31,11 @@
     </table>
 
     {% if results.has_prev %}
-        <a href="{{ url_for('search_results', query=query, page=results.prev_num) }}">&lt;&lt; </a>
+        <a href="{{ url_for('search_results', query=query, type=type, page=results.prev_num) }}">&lt;&lt; </a>
     {% endif %}
     {{ results.page }} of {{ results.pages }}
     {% if results.has_next %}
-        <a href="{{ url_for('search_results', query=query, page=results.next_num) }}"> &gt;&gt;</a>
+        <a href="{{ url_for('search_results', query=query, type=type, page=results.next_num) }}"> &gt;&gt;</a>
     {% endif %}
 </div>
 <!-- /.well -->

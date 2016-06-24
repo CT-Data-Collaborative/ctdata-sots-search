@@ -1,0 +1,27 @@
+{
+  "name": "ctdata-sots-search",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CT-Data-Collaborative/ctdata-sots-search.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CT-Data-Collaborative/ctdata-sots-search/issues"
+  },
+  "homepage": "https://github.com/CT-Data-Collaborative/ctdata-sots-search#readme",
+  "dependencies": {
+    "gulp": "^3.9.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-exec": "^2.1.2",
+    "gulp-shell": "^0.5.2"
+  }
+}

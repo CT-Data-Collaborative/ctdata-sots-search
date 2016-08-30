@@ -1,0 +1,24 @@
+{% if principals %}
+<p class='table-name'>Principals Details</p>
+<table class="principals">
+    <thead>
+        <tr>
+            <th>Name/Title</th>
+            <th>Business Address</th>
+            <th>Residence Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for principal in principals %}
+        <tr>
+            <td>{{ principal.nm_name }} {{ principal.tx_title }}</td>
+            <td>{{ principal.business_address }}</td>
+            <td>{{ principal.res_address }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<H2>NO PRINCIPALS</H2>
+{% endif %}
+<!-- /.principals -->

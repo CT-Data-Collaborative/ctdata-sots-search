@@ -1,0 +1,49 @@
+table {
+  border-top: solid 2px $ctdata-dark-blue;
+  border-bottom: solid 2px $ctdata-dark-blue;
+  width: calc(100% - 6rem);
+  margin-left: 3rem;
+  margin-right: 3rem;
+}
+
+thead {
+  border-bottom: solid 1px $ctdata-dark-blue;
+}
+
+td, th {
+  padding: .5rem .75rem;
+  border-right: dotted 1px $extra-dark-grey;
+}
+
+td:last-of-type, th:last-of-type {
+  border-right: hidden;
+}
+
+tr.even {
+  background-color: $extra-light-grey;
+}
+
+tbody {
+  tr:hover {
+    background-color: #86989B;
+
+    td {
+      color: white;
+    }
+  }
+}
+
+.agents, .principals {
+  margin-top: 1rem;
+}
+
+.detail-table, .principals {
+  margin-bottom: 2rem;
+}
+
+.table-name {
+  padding-left: .75rem;
+  margin-left: 3rem;
+  margin-top: .5rem;
+  font-weight: bold;
+}

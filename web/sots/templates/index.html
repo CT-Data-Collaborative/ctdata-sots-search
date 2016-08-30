@@ -1,44 +1,69 @@
 {% extends "_base.html" %}
 
 {% block content %}
-
-<div class="text-center">
-  <h1>Search CTData SOTS Database</h1>
+<div class="hero">
 </div>
-
-<div class="well">
-        <form action="/" method="post" name="search" class="form-horizontal">
-          {{ form.csrf_token }}
-          <div class="control-group{% if form.search_term.errors %} error {% endif %}">
-            <label for="search" class="control-label">Search: </label>
-            <div class="controls">
-              {{ form.search_term(size=30) }}
-              {% for error in form.search_term.errors %}
-                <span class="help-inline">[{{ error }}]</span><br>
-              {% endfor %}
+<div class="row extra-dark-blue">
+    <div class="col-xs-10 col-sm-offset-1">
+        <div class="intro">
+            <h1>Connecticut Business Registration Data</h1>
+            <p>Search for CT business registered with the Secretary of the State.</p>
+        </div>
+    </div>
+    <!-- /.col-sm-10 col-sm-offset-1 -->
+</div>
+<!-- /.row -->
+<div class="row light-grey">
+    <div class="col-sm-10 col-sm-offset-1">
+        {% include 'partials/search-form.html' %}
+        <!--<div class="well">-->
+            <!---->
+            <!--&lt;!&ndash; /.form-horizontal &ndash;&gt;-->
+        <!--</div>-->
+        <!-- /.well -->
+    </div>
+    <!-- /.col-sm-8 col-sm-offset-2 -->
+</div>
+<!-- /.row -->
+<div class="row white">
+    <div class="col-sm-4 col-sm-offset-1">
+        <div class="card">
+            <div class="icon">
+                <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-sliders fa-stack-1x"></i>
+            </span>
             </div>
-            <!-- /.controls -->
-            <!-- /.control-label -->
-          </div>
-            <div>
-                {{ form.choice.label }}:
-                {{ form.choice() }}
+            <div class="advanced-search">
+                <a href="#"><h3>Advanced search</h3></a>
+                <p>Execute more complex searches.</p>
             </div>
-
-          <!-- /.control-group -->
-          <div class="control-group">
-            <div class="controls">
-              <input type="submit" value="Go" class="btn btn-primary">
-              <!-- /.btn btn-primary -->
+        </div>
+    </div>
+    <div class="col-sm-4 col-sm-offset-1">
+        <div class="card">
+            <div class="icon">
+                <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-map fa-stack-1x"></i>
+            </span>
             </div>
-            <!-- /.controls -->
-          </div>
-          <!-- /.control-group -->
-        </form>
-        <!-- /.form-horizontal -->
-      </div>
-      <!-- /.well -->
-<br>
-
+            <div class="advanced-search">
+                <a href="#"><h3>Geo search</h3></a>
+                <p>Search for businesses by geography.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+<div class="row white">
+    <div class="col-sm-10 col-sm-offset-1">
+        <hr>
+        <h2>Explore Interactive Visualizations of Business Registration Data.</h2>
+        <p>These overviews are visual explorations of trends in the business activity.</p>
+    </div>
+    <!-- /.col-sm-10 col-sm-offset-1 -->
+</div>
+<!-- /.row -->
 
 {% endblock %}

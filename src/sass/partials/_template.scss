@@ -1,0 +1,133 @@
+* {
+  font: 16px $font1;
+  color: $extra-dark-grey;
+}
+
+html, body {
+  font-size: 16px !important;
+}
+
+.infobox-title {
+  margin-bottom: 1rem;
+}
+
+.home-internal-no-img, #main {
+  //background: $extra-light-grey;
+  overflow-y: auto;
+  height: calc(100vh - 5rem);
+}
+
+.home-internal {
+  background: $extra-light-grey;
+  overflow-y: auto;
+  height: calc(100vh - 16rem);
+}
+
+@media (min-width: 48em) {
+  .home-internal {
+    height: calc(100vh - 17rem);
+  }
+}
+
+@media (min-width: 62em) {
+  .home-internal {
+    height: calc(100vh - 21rem);
+  }
+}
+
+@media (min-width: 75em) {
+  .home-internal {
+    height: calc(100vh - 23rem);
+  }
+}
+
+@media (min-width: 86em) {
+  .home-internal {
+    height: calc(100vh - 27rem);
+  }
+}
+
+/* Pill nav styling */
+li.uib-tab.nav-item {
+  border-radius: 0.25rem;
+  margin: 0.25rem;
+
+  background-color: $extra-light-grey;
+
+  uib-tab-heading, uib-tab-heading i {
+    color: $extra-dark-grey;
+  }
+}
+
+li.uib-tab.nav-item.active {
+  background-color: $ctdata-extra-dark-blue;
+
+  uib-tab-heading, uib-tab-heading i {
+    color: $white;
+  }
+}
+
+/* END Pill nav styling */
+
+.intro {
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+
+  h1, h2, h3 {
+    width: 100%;
+    font-family: $font2;
+    font-weight: bold;
+    color: whitesmoke;
+    border-bottom: 2px solid #f1f1f1;
+  }
+  p {
+    color: whitesmoke;
+    font-family: $font2;
+  }
+}
+
+.hero {
+  background-image: url('https://beta.fec.gov/data/static/img/hero-data.jpg');
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+  height: 2.5rem;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.card {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: $extra-light-grey;
+  border-radius: 4px;
+  float: left;
+  width: 100%;
+
+  .icon {
+    float: left;
+    padding: 1.5rem;
+    background-color: $ctdata-extra-dark-blue;
+    border-radius: 4px 0 0 4px;
+
+    .fa-stack {
+      height: 3rem;
+    }
+    .fa-map, .fa-sliders {
+      color: $ctdata-extra-dark-blue;
+    }
+  }
+
+  .advanced-search {
+    height: 6rem;
+    padding-left: 1rem;
+    float: left;
+    h1, h2, h3 {
+      font-family: $font2;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+}

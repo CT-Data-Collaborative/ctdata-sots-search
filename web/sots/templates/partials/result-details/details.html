@@ -1,0 +1,47 @@
+<table class="detail-table">
+    <thead>
+    <th class='table-name' colspan="4">Business Details</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Business Name:</td>
+        <td>{{ result.nm_name }}</td>
+        <td>Citizenship/State Inc:</td>
+        <td>{{ domesticity.domesticity }}</td>
+    </tr>
+    <tr>
+        <td>Business ID:</td>
+        <td>{{ result.id_bus }}</td>
+        <td>Last Report Filed Year:</td>
+        <td>&mdash;</td>
+    </tr>
+    <tr>
+        <td>Business Address:</td>
+        <td>{{ result.address }}</td>
+        {% if domesticity.type %}
+        <td>Business Type:</td>
+        <td>{{ domesticity.type }}</td>
+        {% else %}
+        <td></td>
+        <td></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td>Mailing Address:</td>
+        <td>{{ result.mailing_address }}</td>
+        <td>Business Status: </td>
+        <td>{{ result.status }}</td>
+    </tr>
+    <tr>
+        <td>Date Inc/Registration:</td>
+        <td>{{ result.dt_origin | simpledate }}</td>
+        {% if domesticity.category %}
+        <td>Category</td>
+        <td>{{ domesticity.category }}</td>
+        {% else %}
+        <td></td>
+        <td></td>
+        {% endif %}
+    </tr>
+    </tbody>
+</table>

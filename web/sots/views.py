@@ -1,5 +1,5 @@
 from sots import app, db
-from flask import render_template,  redirect, url_for
+from flask import render_template, request, redirect, url_for
 from sqlalchemy import func
 from sots.models import FullTextIndex, BusMaster, Principal, Status, Subtype, Corp, \
     DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust
@@ -79,7 +79,10 @@ def domesticity_lookup(bus_id, subtype):
     lookup = type_table_lookup[subtype]
     return lookup(bus_id)
 
-
+def redirect_url(default='index'):
+    return request.args.get('next') or \
+           request.referrer or \
+           url_for(default)
 
 
 @app.route('/search_results/<type>/<query>/<int:page>', methods=['GET'])
@@ -102,7 +105,8 @@ def detail(id):
     return render_template('results_detail.html',
                            result=result,
                            principals=principals,
-                           domesticity=domesticity)
+                           domesticity=domesticity,
+                           results_page=redirect_url())
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

@@ -1,0 +1,82 @@
+// Give header a nice bottom margin
+.navbar-header {
+  height: 3rem;
+  width: 100%;
+
+  .navbar {
+    background-color: $ctdata-extra-dark-blue;
+    border-radius: 0;
+  }
+
+  ul.pull-right {
+    list-style-type: none;
+    margin: 0;
+    padding: .25rem 0 0 0;
+    float: right;
+
+    li {
+      float:left;
+      margin: .4rem .5rem .4rem .5rem;
+      padding: 0;
+    }
+
+    li.logo {
+      //margin-right: 2rem;
+    }
+    a {
+      color: #d2e4e7;
+      text-decoration: none;
+      font-size: .85rem;
+    }
+
+    a:hover {
+      color:#fff;
+      text-decoration: none;
+    }
+    a.social {
+      padding: 0;
+    }
+  }
+
+  .logo-circle {
+    margin-top: .25em;
+    margin-right: .25em;
+    border-radius: 50%;
+    width: 1em;
+    height: 1em;
+    float: right;
+  }
+
+  .logo-link {
+    font-size: 0.85rem;
+    font-weight: $light;
+    padding: 0 .5em 0 0;
+    display: inline;
+  }
+  .logo-link:after {
+    content: "Created by Connecticut Data Collaborative";
+  }
+}
+
+.connect-logo {
+  max-height: 2.5rem;
+}
+
+@media screen and (max-width: 400px) {
+  .navbar-header {
+    .logo-circle {
+      width: .75rem;
+      height: .75rem;
+      margin-top: .35rem;
+    }
+    .logo-link:after {
+      content: "Created by CTData";
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .connect-logo {
+    max-height: .5rem;
+  }
+}

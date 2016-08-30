@@ -1,0 +1,16 @@
+<form action="/" method="post" name="search" class="form-inline sots-form">
+    {{ form.csrf_token }}
+    <div class="control-group{% if form.search_term.errors %} error {% endif %}">
+        <div class="form-group">
+            <span>{{ form.choice(class_='form-control') }}</span>
+            <span>{{ form.search_term(size=30, class_='form-control', placeholder='Search for') }}</span>
+            {% for error in form.search_term.errors %}
+            <span class="help-inline">[{{ error }}]</span><br>
+            {% endfor %}
+            <span><button type='submit' class="btn btn-sots"><i class="fa fa-inverse fa-search"></i></button></span>
+        </div>
+        <!-- /.controls -->
+        <!-- /.control-label -->
+    </div>
+    <div class="instructions">Example: Frank Pepe's, 805 Brook Street Rocky Hill, 0185038</div>
+</form>

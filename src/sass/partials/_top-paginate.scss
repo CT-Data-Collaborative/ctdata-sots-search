@@ -1,0 +1,27 @@
+.top-paginate {
+  margin-left: 3rem;
+  margin-right: 3rem;
+  .paginate-info, .paginate-navigate {
+    float: right;
+  }
+  .paginate-info {
+    padding-right: .5rem;
+  }
+  .query-info {
+    float: left;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+}
+
+.bottom-paginate {
+  margin-left: 3rem;
+  margin-right: 3rem;
+  padding-bottom: 5rem;
+  .paginate-info, .paginate-navigate {
+    float: left;
+  }
+  .paginate-info {
+    padding-right: .5rem;
+  }
+}

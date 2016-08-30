@@ -1,43 +1,16 @@
 {% extends "_base.html" %}
 
 {% block content %}
-
-<div>
-    <h2><a href="{{ url_for('index') }}">Start a new search.</a></h2>
-</div>
-<div class="well">
-    <h1>Search results for "{{ query }}"</h1>
-    <table>
-        <thead>
-            <th>#</th>
-            <th>Business Name</th>
-            <th>Business ID</th>
-            <th>Date Registered</th>
-            <th>Status</th>
-            <th>Business Address</th>
-        </thead>
-        <tbody>
-            {% for result in results.items %}
-                <tr>
-                    <td>{{ loop.index }}</td>
-                    <td><a href="{{ url_for('detail', id=result.id_bus) }}">{{ result.nm_name }}</a></td>
-                    <td>{{ result.id_bus }}</td>
-                    <td>{{ result.dt_origin }}</td>
-                    <td>{{ result.status }}</td>
-                    <td>{{ result.address }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    {% if results.has_prev %}
-        <a href="{{ url_for('search_results', query=query, type=type, page=results.prev_num) }}">&lt;&lt; </a>
-    {% endif %}
-    {{ results.page }} of {{ results.pages }}
-    {% if results.has_next %}
-        <a href="{{ url_for('search_results', query=query, type=type, page=results.next_num) }}"> &gt;&gt;</a>
-    {% endif %}
-</div>
-<!-- /.well -->
-
+    <div class="search">
+        <a href="{{ url_for('index') }}">
+            <icon class="fa fa-search"></icon>
+            Start a new search.
+        </a>
+    </div>
+    <div>
+        {% include 'partials/result-list/top-paginate.html' %}
+        {% include 'partials/result-list/list.html' %}
+        {% include 'partials/result-list/bottom-paginate.html' %}
+    </div>
+    <!-- /.well -->
 {% endblock %}

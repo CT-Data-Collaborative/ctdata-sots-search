@@ -1,0 +1,19 @@
+<div class="bottom-paginate">
+    <span class="paginate-info">{{ results.page }} of {{ results.pages }}</span>
+    <span class="paginate-navigate">
+        {% if results.has_prev %}
+            <a href="{{ url_for('search_results', query=query, type=type, page=results.prev_num) }}">
+                <icon class="fa fa-chevron-circle-left"></icon>
+            </a>
+        {% endif %}
+        {% if results.has_next %}
+            <a href="{{ url_for('search_results', query=query, type=type, page=results.next_num) }}">
+                <icon class="fa fa-chevron-circle-right"></icon>
+            </a>
+        {% endif %}
+    </span>
+</div>
+<!-- /.top-paginate -->
+
+
+

@@ -1,0 +1,29 @@
+// This is a fix for the bootstrap4 alpha release
+@media (max-width: 47.9em) {
+  .navbar-nav .nav-item {
+    display: inline-block;
+    float: none;
+    width: 100%;
+  }
+
+  .navbar-nav .nav-item + .nav-item {
+    margin-left: 0;
+  }
+
+  //.nav.navbar-nav.pull-right {
+  //  float: none !important;
+  //}
+}
+
+[hidden][style="display: block;"] {
+  display: block !important;
+}
+
+@import 'partials/variables';
+@import 'partials/template';
+@import 'partials/nav';
+@import 'partials/footer';
+@import 'partials/forms';
+@import 'partials/table';
+@import 'partials/top-paginate';
+@import 'partials/results-pages';

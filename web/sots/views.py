@@ -1,7 +1,7 @@
 from sots import app, db
 from flask import render_template, request, redirect, url_for
 from sqlalchemy import func
-from sots.models import FullTextIndex, BusMaster, Principal, Status, Subtype, Corp, \
+from sots.models import FullTextIndex, BusMaster, Principal, BusFiling, Status, Subtype, Corp, \
     DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust
 from sots.forms import SearchForm, AdvancedSearchForm
 from sots.config import BaseConfig as ConfigObject
@@ -84,7 +84,15 @@ def redirect_url(default='index'):
            request.referrer or \
            url_for(default)
 
-
+def get_latest_report(bus_id):
+    report_codes = ['CFRN', 'CFRS', 'CRLC', 'CRLCF', 'CRLLP', 'CRLLPF', 'CRLP',
+                    'CRLPF', 'CRS', 'CRN', 'COB', 'CON', 'COS']
+    latest_report = BusFiling.query.filter(BusFiling.id_bus == bus_id).filter(
+        BusFiling.cd_trans_type.in_(report_codes)).order_by(BusFiling.id_bus_flng.desc()).first()
+    if latest_report:
+        return latest_report.tx_certif
+    else:
+        return "No Reports Found"
 
 @app.route('/search_results', methods=['GET'])
 def search_results():
@@ -127,8 +135,10 @@ def detail(id):
     except AttributeError:
         return redirect(url_for('index'))
     principals = Principal.query.filter(Principal.id_bus == str(id)).all()
+    report = get_latest_report(id)
     return render_template('results_detail.html',
                            result=result,
+                           report=report,
                            principals=principals,
                            domesticity=domesticity,
                            results_page=redirect_url())

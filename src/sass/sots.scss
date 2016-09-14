@@ -15,6 +15,10 @@
   //}
 }
 
+ul#nav {
+  display: inline-flex;
+}
+
 [hidden][style="display: block;"] {
   display: block !important;
 }
@@ -27,3 +31,5 @@
 @import 'partials/table';
 @import 'partials/top-paginate';
 @import 'partials/results-pages';
+@import 'partials/offcanvas';
+@import 'partials/breadcrumbs';

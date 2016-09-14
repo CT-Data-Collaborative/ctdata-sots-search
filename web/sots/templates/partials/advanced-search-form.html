@@ -1,0 +1,38 @@
+<form action="{{ url_for('advanced') }}" method="post" name="advanced_search" class="form-inline sots-form sots-form--advanced">
+    <div class="control-group{% if form.query.errors %} error {% endif %}">
+        <div class="form-group">
+            <div class="search-tweaks">
+                <p><span class="input-label">Search</span> {{ form.index_field }}</p>
+                <p><span class="input-label">For</span> {{ form.query(size=30, placeholder='Enter term to search for...') }}</p>
+            </div>
+            <div class="search-tweaks">
+                <h4>Limit by Start Date of Business</h4>
+                <!--<span class="input-label">Start:</span>-->
+                <div class="input-group date" id="start" data-provide="datepicker" data-orientation="bottom" data-date-format="yyyy-mm-dd">
+                    <span class="input-group-addon">Start Date</span>
+                    <!-- /.input-grou-addon -->
+                    {{ form.start_date(class='form-control') }}
+                    <!--<div class="input-group-addon">-->
+                        <!--<span class="fa fa-calendar"></span>-->
+                    <!--</div>-->
+                </div>
+                <!-- /.input-group date -->
+                <!--<span class="input-label">End:</span>-->
+                <div class="input-group date" id="end" data-provide="datepicker" data-orientation="bottom" data-date-format="yyyy-mm-dd">
+                    <span class="input-group-addon">End Date</span>
+                    {{ form.end_date(class='form-control') }}
+                    <!--<div class="input-group-addon">-->
+                        <!--<span class="fa fa-calendar"></span>-->
+                    <!--</div>-->
+                </div>
+            </div>
+            <div class="search-tweaks">Active businesses only? {{ form.active }}</div>
+            <div class="search-tweaks">Select one or more business types: {{ form.business_type }}</div>
+            <span><button type='submit' class="btn btn-sots"><i class="fa fa-inverse fa-search"></i></button></span>
+            {{ form.hidden_tag('csrf_token', 'sort_by') }}
+            {% for error in form.query.errors %}
+            <span class="help-inline">[{{ error }}]</span><br>
+            {% endfor %}
+        </div>
+    </div>
+</form>

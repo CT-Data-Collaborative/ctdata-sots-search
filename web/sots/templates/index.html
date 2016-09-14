@@ -1,69 +1,60 @@
 {% extends "_base.html" %}
 
 {% block content %}
-<div class="hero">
-</div>
-<div class="row extra-dark-blue">
-    <div class="col-xs-10 col-sm-offset-1">
-        <div class="intro">
-            <h1>Connecticut Business Registration Data</h1>
-            <p>Search for CT business registered with the Secretary of the State.</p>
+    <div class="hero">
+    </div>
+    {% include 'partials/intro.html' %}
+    <div class="row light-grey">
+        <div class="col-sm-10 col-sm-offset-1">
+            {% include 'partials/search-form.html' %}
+            <!--<div class="well">-->
+                <!---->
+                <!--&lt;!&ndash; /.form-horizontal &ndash;&gt;-->
+            <!--</div>-->
+            <!-- /.well -->
+        </div>
+        <!-- /.col-sm-8 col-sm-offset-2 -->
+    </div>
+    <!-- /.row -->
+    <div class="row white">
+        <div class="col-sm-10 col-lg-4 col-sm-offset-1">
+            <div class="card">
+                <div class="icon">
+                    <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                    <i class="fa fa-sliders fa-stack-1x"></i>
+                </span>
+                </div>
+                <div class="advanced-search">
+                    <a href="{{ url_for('advanced') }}"><h3>Advanced search</h3></a>
+                    <p>Execute more complex searches.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-10 col-lg-4 col-sm-offset-1">
+            <div class="card">
+                <div class="icon">
+                    <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                    <i class="fa fa-map fa-stack-1x"></i>
+                </span>
+                </div>
+                <div class="advanced-search">
+                    <a href="#"><h3>Geo search</h3></a>
+                    <p>Search by geography.</p>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- /.col-sm-10 col-sm-offset-1 -->
-</div>
-<!-- /.row -->
-<div class="row light-grey">
-    <div class="col-sm-10 col-sm-offset-1">
-        {% include 'partials/search-form.html' %}
-        <!--<div class="well">-->
-            <!---->
-            <!--&lt;!&ndash; /.form-horizontal &ndash;&gt;-->
+    <!-- /.row -->
+    <div class="row white">
+        <!--<div class="col-sm-10 col-sm-offset-1">-->
+            <!--<hr>-->
+            <!--<h2>Explore Interactive Visualizations of Business Registration Data.</h2>-->
+            <!--<p>These overviews are visual explorations of trends in the business activity.</p>-->
         <!--</div>-->
-        <!-- /.well -->
+        <!-- /.col-sm-10 col-sm-offset-1 -->
     </div>
-    <!-- /.col-sm-8 col-sm-offset-2 -->
-</div>
-<!-- /.row -->
-<div class="row white">
-    <div class="col-sm-4 col-sm-offset-1">
-        <div class="card">
-            <div class="icon">
-                <span class="fa-stack fa-lg">
-                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-                <i class="fa fa-sliders fa-stack-1x"></i>
-            </span>
-            </div>
-            <div class="advanced-search">
-                <a href="#"><h3>Advanced search</h3></a>
-                <p>Execute more complex searches.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-4 col-sm-offset-1">
-        <div class="card">
-            <div class="icon">
-                <span class="fa-stack fa-lg">
-                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-                <i class="fa fa-map fa-stack-1x"></i>
-            </span>
-            </div>
-            <div class="advanced-search">
-                <a href="#"><h3>Geo search</h3></a>
-                <p>Search for businesses by geography.</p>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /.row -->
-<div class="row white">
-    <div class="col-sm-10 col-sm-offset-1">
-        <hr>
-        <h2>Explore Interactive Visualizations of Business Registration Data.</h2>
-        <p>These overviews are visual explorations of trends in the business activity.</p>
-    </div>
-    <!-- /.col-sm-10 col-sm-offset-1 -->
-</div>
-<!-- /.row -->
+    <!-- /.row -->
 
 {% endblock %}

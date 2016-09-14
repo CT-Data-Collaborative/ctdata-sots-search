@@ -4,19 +4,20 @@ from flask import url_for
 from sots import app
 from sots.views import check_none, simple_date, corp_domesticity, dom_domesticity, for_lmt_liab_cmpy_domesticity, \
     for_lmt_liab_part_domesticity, for_lmt_part_domesticity, for_stat_trust_domesticity, gen_part_domesticity, \
-    other_domesticity, domesticity_lookup, search_results
+    other_domesticity, domesticity_lookup, basic_search_results
 from sots.models import FullTextIndex, BusMaster
-from sots.forms import SearchForm
+from sots.forms import SearchForm, AdvancedSearchForm
 from datetime import datetime
 from urllib.parse import urlparse
 from wtforms import SelectField
 from werkzeug.debug import DebuggedApplication
 
-app.wsgi_app = DebuggedApplication(app.wsgi_app, False
-                                   )
+app.wsgi_app = DebuggedApplication(app.wsgi_app, False)
+
 @pytest.fixture
 def client(request):
     app.config['WTF_CSRF_ENABLED'] = False
+    app.testing = True
     client = app.test_client()
     def teardown():
         pass
@@ -38,7 +39,14 @@ def test_home_content(client):
     content_type = 'text/html; charset=utf-8'
     assert content_type == rv.headers['content-type']
 
+def test_advanced(client):
+    rv = client.get('/advanced_search')
+    assert rv.status_code == 200
 
+def test_advanced_headers(client):
+    rv = client.get('/advanced_search')
+    content_type = 'text/html; charset=utf-8'
+    assert content_type == rv.headers['content-type']
 
 ##########################################################################################
 #
@@ -98,8 +106,70 @@ def test_search_form_live_data(client):
         form_data = {'search_term': 'r.c. bigelow', 'choice': 'business_name'}
         rv = client.post('/', data=form_data, follow_redirects=False)
         assert rv.status_code == 302
-        expected = url_for('search_results', query='r.c. bigelow', type='business_name', page=1)
+        expected = url_for('basic_search_results', query='r.c. bigelow', index_field='business_name', page=1)
         assert urlparse(rv.location).path == expected
+
+def test_advanced_search_form_field(client):
+    with app.test_request_context():
+        f = AdvancedSearchForm()
+        assert f.data == {
+            'start_date': None, 'end_date': None, 'business_type': None,
+            'active': False, 'choice': 'None', 'search_term': None
+        }
+
+def test_advanced_search_form_search_field_choices(client):
+    with app.test_request_context():
+        f = AdvancedSearchForm()
+        choices = [
+            ('business_name', 'Business Name'),
+            ('place_of_business_address', 'Business Address'),
+            ('bus_id', 'Business ID'),
+            ('filing_number', 'Filing Number'),
+            ('principal_name', 'Principal Name'),
+            ('principal_business_address', 'Principal Address')
+        ]
+        assert f.choice.choices == choices
+
+def test_advanced_search_form_business_type_choices(client):
+    with app.test_request_context():
+        f = AdvancedSearchForm()
+        choices = [('C', 'Corporation'),
+                   ('D', 'Domestic Limited Partnership'),
+                   ('F', 'Foreign Limited Partnership'),
+                   ('G', 'Domestic Limited Liability Company'),
+                   ('H', 'Foreign Limited Liability Company'),
+                   ('I', 'Domestic Limited Liability Partnership'),
+                   ('J', 'Foreign Limited Liability Partnership'),
+                   ('K', 'General Partnership'),
+                   ('L', 'Domestic Statutory Trust'),
+                   ('M', 'Foreign Statutory Trust'),
+                   ('O', 'Other'),
+                   ('P', 'Domestic Stock Corporation'),
+                   ('Q', 'Foreign Stock Corporation'),
+                   ('R', 'Domestic Non-Stock Corporation'),
+                   ('S', 'Foreign Non-Stock Corporation'),
+                   ('T', 'All Entities'),
+                   ('U', 'Domestic Credit Union Stock'),
+                   ('V', 'Domestic Credit Union Non-Stock'),
+                   ('W', 'Domestic Bank Stock'),
+                   ('X', 'Domestic Bank Non-Stock'),
+                   ('Y', 'Domestic Insurance Stock'),
+                   ('Z', 'Domestic Insurance Non-Stock'),
+                   ('B', 'Benefit Corporation')]
+        assert f.business_type.choices == choices
+
+
+def test_advanced_search_form_submit(client):
+    """ Do we get back a valid result including a redirect"""
+    form_data = {'search_term': '342sdfjkl;ajs',
+                 'choice': 'bus_name',
+                 'start_date': None,
+                 'end_date': None,
+                 'active': False,
+                 'business_type': None}
+    rv = client.post('/advanced_search', data= form_data, follow_redirects=True)
+    assert rv.status_code == 200
+
 
 ##########################################################################################
 #
@@ -114,7 +184,7 @@ def test_search_form_live_data(client):
 
 def test_search_type_processing(client):
     with app.test_request_context():
-        page = search_results(query='r.c. bigelow', page=1,type = 'bus_name')
+        page = basic_search_results(query='r.c. bigelow', page=1, index_field = 'bus_name')
         assert isinstance(page, str)
 
 def test_bus_id_lookup(client):

@@ -1,10 +1,10 @@
-<form action="/" method="post" name="search" class="form-inline sots-form">
-    {{ form.csrf_token }}
-    <div class="control-group{% if form.search_term.errors %} error {% endif %}">
+<form action="/" method="post" name="search" class="form-inline sots-form sots-form__basic">
+    {{ form.hidden_tag('csrf_token', 'sort_by') }}
+    <div class="control-group{% if form.query.errors %} error {% endif %}">
         <div class="form-group">
-            <span>{{ form.choice(class_='form-control') }}</span>
-            <span>{{ form.search_term(size=30, class_='form-control', placeholder='Search for') }}</span>
-            {% for error in form.search_term.errors %}
+            <span>{{ form.index_field(class_='form-control') }}</span>
+            <span>{{ form.query(size=30, class_='form-control', placeholder='Search for') }}</span>
+            {% for error in form.query.errors %}
             <span class="help-inline">[{{ error }}]</span><br>
             {% endfor %}
             <span><button type='submit' class="btn btn-sots"><i class="fa fa-inverse fa-search"></i></button></span>

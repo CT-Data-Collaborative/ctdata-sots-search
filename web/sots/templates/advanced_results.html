@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+
+{% block content %}
+    <div class="search">
+        <a href="{{ url_for('advanced') }}">
+            <icon class="fa fa-search"></icon>
+            Start a new search.
+        </a>
+    </div>
+    <div>
+        <h2>{{index_field}}</h2>
+        <p>{{start}}</p>
+        <p>{{end}}</p>
+        <p>{% for b in business_type %}{{b}},{% endfor %}</p>
+    </div>
+    <div>{{args}}</div>
+    <!-- /.well -->
+{% endblock %}

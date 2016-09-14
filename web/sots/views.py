@@ -3,11 +3,11 @@ from flask import render_template, request, redirect, url_for
 from sqlalchemy import func
 from sots.models import FullTextIndex, BusMaster, Principal, Status, Subtype, Corp, \
     DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust
-from sots.forms import SearchForm
+from sots.forms import SearchForm, AdvancedSearchForm
 from sots.config import BaseConfig as ConfigObject
 from sots.helpers import corp_type_lookup, origin_lookup, category_lookup
 from sots.helpers import check_empty as check_none
-
+from datetime import datetime, date
 
 def corp_domesticity(bus_id):
     r = Corp.query.filter(Corp.id_bus == str(bus_id)).first()
@@ -85,13 +85,38 @@ def redirect_url(default='index'):
            url_for(default)
 
 
-@app.route('/search_results/<type>/<query>/<int:page>', methods=['GET'])
-def search_results(type, query, page=1):
-    tq = func.plainto_tsquery('english', query)
-    results = FullTextIndex.query.filter(FullTextIndex.index_name == type).\
-        filter(FullTextIndex.document.op('@@')(tq)).\
-        paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
-    return render_template('results.html', query=query, type=type, results=results)
+
+@app.route('/search_results', methods=['GET'])
+def search_results():
+    page = int(request.args.get('page'))
+    q_object = {
+        'query': request.args.get('query'),
+        'index_field': request.args.get('index_field'),
+        'active': request.args.get('active'),
+        'sort_by': request.args.get('sort_by'),
+    }
+    try:
+        q_object['start_date'] = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
+        q_object['end_date'] = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')
+    except TypeError:
+        q_object['start_date'] = date(year=1990, month=1, day=1)
+        q_object['end_date'] = datetime.now()
+    q_object['business_type'] = request.args.getlist('business_type')
+    tq = func.plainto_tsquery('english', q_object['query'])
+    results = FullTextIndex.query.filter(FullTextIndex.index_name == q_object['index_field']). \
+        filter(FullTextIndex.document.op('@@')(tq))
+    if q_object['active']:
+        results = results.filter(FullTextIndex.status == 'Active')
+    if q_object['start_date'] and q_object['end_date']:
+        results = results.filter(FullTextIndex.dt_origin.between(q_object['start_date'], q_object['end_date']))
+    if q_object['business_type']:
+        if q_object['business_type'] == ['All Entities']:
+            pass
+        else:
+            results = results.filter(FullTextIndex.type.in_(q_object['business_type']))
+    results = results.order_by(q_object['sort_by']).paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
+    form = AdvancedSearchForm(**q_object)
+    return render_template('results.html', results=results, q_obj=q_object, form=form)
 
 
 @app.route('/business/<id>', methods=['GET'])
@@ -113,12 +138,27 @@ def index():
     form = SearchForm()
     if form.validate_on_submit():
         return redirect(url_for('search_results',
-                                query=form.search_term.data,
-                                type=form.choice.data,
+                                query=form.query.data,
+                                index_field=form.index_field.data,
                                 page=1))
     return render_template('index.html', form=form)
 
 
+@app.route('/advanced_search', methods=['GET', 'POST'])
+def advanced():
+    form = AdvancedSearchForm()
+    form.business_type.default = 'All Entities'
+    if form.validate_on_submit():
+        return redirect(url_for('search_results',
+                                query=form.query.data,
+                                index_field=form.index_field.data,
+                                business_type=form.business_type.data,
+                                start_date=form.start_date.data,
+                                end_date=form.end_date.data,
+                                active=form.active.data,
+                                sort_by=form.sort_by.data,
+                                page=1))
+    return render_template('advanced.html', form=form)
 
 # Filters for Jinja
 app.template_filter('checknone')(check_none)

@@ -38,7 +38,12 @@
     font-size: 1rem;
     margin-top: .5rem;
   }
-
+  .input-group.date {
+    input {
+      height: initial;
+      width: initial;
+    }
+  }
 
   @media screen and (min-width: 40em) {
     select.form-control {
@@ -58,9 +63,61 @@
       width: calc(100% - 24rem);
       font-size: 1.4rem;
     }
+    .input-group.date {
+      input {
+        height: initial;
+        width: initial;
+        font-size: initial;
+      }
+    }
   }
   .instructions {
     font-style: italic;
     text-align: center;
+  }
+}
+
+.sots-form.sots-form--advanced {
+  .search-tweaks {
+    padding-bottom: 1rem;
+  }
+  .input-label {
+    display: inline-block;
+    width: 3.75rem;
+  }
+  input, select {
+    max-width: 100%;
+    width: 95%;
+  }
+  select {
+    margin-top: .25rem;
+  }
+  input#query,
+  //input#start_date,
+  //input#end_date,
+  select#index_field {
+    width: calc(95% - 3.75rem);
+  }
+  input#active {
+    margin-left: .25rem;
+    width: initial;
+  }
+  input#start_date, input#end_date {
+    width: 150px;
+  }
+  h3, h4 {
+    font-weight: bold;
+  }
+  .btn-sots {
+    width: 95%;
+    height: 2.5rem;
+    border-radius: 0;
+    background-color: $buttongreen;
+  }
+  .input-group.date {
+    padding-bottom: 1rem;
+  }
+  .input-group.date span.input-group-addon {
+    min-width: 80px;
   }
 }

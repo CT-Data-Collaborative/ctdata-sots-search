@@ -3,15 +3,18 @@
 {% block content %}
 <div>
     <div class="search">
-        <a href="{{ url_for('index') }}">
-            <icon class="fa fa-search"></icon>
-            Start a new search.
-        </a>
-        <a class="results-back-link" href="{{ results_page }}">
-            <icon class="fa fa-arrow-circle-left"></icon>
-            <!-- /.fa fa-arrow-circle-left -->
-            Back to results.
-        </a>
+        <div class="breadcrumbs">
+            <a href="{{ url_for('index') }}"><i class="fa fa-home"></i></a> > <a class="results-back-link" href="{{ results_page }}">Results List</a> > Details
+        </div>
+        <!--<a href="{{ url_for('index') }}">-->
+            <!--<icon class="fa fa-search"></icon>-->
+            <!--Start a new search.-->
+        <!--</a>-->
+        <!--<a class="results-back-link" href="{{ results_page }}">-->
+            <!--<icon class="fa fa-arrow-circle-left"></icon>-->
+            <!--&lt;!&ndash; /.fa fa-arrow-circle-left &ndash;&gt;-->
+            <!--Back to results.-->
+        <!--</a>-->
     </div>
 </div>
 <div class="result-detail-table">

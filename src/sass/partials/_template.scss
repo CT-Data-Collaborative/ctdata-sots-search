@@ -13,7 +13,7 @@ html, body {
 
 .home-internal-no-img, #main {
   //background: $extra-light-grey;
-  overflow-y: auto;
+  overflow-y: hidden;
   height: calc(100vh - 5rem);
 }
 
@@ -128,6 +128,22 @@ li.uib-tab.nav-item.active {
 
     a {
       text-decoration: none;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .intro {
+    h1, h1, h3 {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@media (max-width: 340px) {
+  .card {
+    .icon {
+      padding: 1.5rem 0.5rem;
     }
   }
 }

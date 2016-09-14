@@ -2,12 +2,31 @@
   margin-left: 3rem;
   margin-right: 3rem;
   padding: 1.5rem 0;
-  a {
-    font-size: 1.4rem;
-    float: left;
-  }
+  //a {
+  //  font-size: 1.4rem;
+  //  float: left;
+  //}
 
-  .results-back-link {
-    float: right;
+  //.results-back-link {
+  //  float: right;
+  //}
+}
+
+.sidebar {
+  border-right: solid 1px black;
+}
+
+.sidebar, .maincontent {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  height: 92vh;
+}
+
+.maincontent { overflow-y: scroll;}
+
+.maincontent {
+  .breadcrumbs {
+    padding-left: 3rem;
+    padding-bottom: .5rem;
   }
 }

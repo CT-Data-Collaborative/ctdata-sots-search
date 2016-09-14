@@ -47,3 +47,9 @@ tbody {
   margin-top: .5rem;
   font-weight: bold;
 }
+
+@media (min-width: 768px) {
+  td.reg-date {
+    min-width: 98px;
+  }
+}

@@ -1,16 +1,55 @@
 {% extends "_base.html" %}
-
+{% set start_date = q_obj.pop('start_date').strftime('%Y-%m-%d') %}
+{% set end_date = q_obj.pop('end_date').strftime('%Y-%m-%d') %}
 {% block content %}
-    <div class="search">
-        <a href="{{ url_for('index') }}">
-            <icon class="fa fa-search"></icon>
-            Start a new search.
-        </a>
+    <div class="row row-offcanvas row-offcanvas-left">
+        <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 sidebar sidebar-offcanvas" id="sidebar">
+            <h4>Refine or revise your search</h4>
+            {% include 'partials/advanced-search-form.html' %}
+        </div>
+        <!-- /.col-sm-12 col-md-4 -->
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-9 maincontent">
+            <div class="overlay"></div>
+            <!-- /.overla -->
+            {% with start_date = start_date, end_date = end_date, current = 'Search Results' %}
+            {% include 'partials/breadcrumbs.html'%}
+            <p class="pull-left visible-sm visible-xs toggle">
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Revise Search Results</button>
+            </p>
+            {% include 'partials/result-list/top-paginate.html' %}
+            {% endwith %}
+            {% include 'partials/result-list/list.html' %}
+            {% with start_date = start_date, end_date = end_date %}
+                {% include 'partials/result-list/bottom-paginate.html' %}
+            {% endwith %}
+        </div>
+        <!-- /.col-sm-12 col-md-8 -->
     </div>
-    <div>
-        {% include 'partials/result-list/top-paginate.html' %}
-        {% include 'partials/result-list/list.html' %}
-        {% include 'partials/result-list/bottom-paginate.html' %}
-    </div>
-    <!-- /.well -->
+    <!-- /.row -->
+{% endblock %}
+{% block js %}
+    {{ super()}}
+    <script>
+        $(document).ready(function () {
+            $('.sortable-header').click(function() {
+                var sortBy = $(this).data().sortBy;
+                document.getElementById('sort_by').value = sortBy;
+                $('form[name=advanced_search]').trigger('submit');
+            });
+            $('[data-toggle="offcanvas"]').click(function () {
+                $('.row-offcanvas').toggleClass('active');
+                $('.maincontent').toggleClass('active');
+            });
+            $('#start .input-group.date').datepicker({
+                startDate: '1990-01-01',
+                startView: '0d',
+                endDate: '0d'
+            });
+            $('#end .input-group.date').datepicker({
+                startDate: '2016-09-01',
+                startView: '0d',
+                endDate: '0d'
+            });
+        });
+    </script>
 {% endblock %}

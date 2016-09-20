@@ -23,25 +23,28 @@ class FullTextIndex(db.Model):
     search_type = db.Column(db.String)
     type = db.Column(db.String)
     status = db.Column(db.String)
-    ad_str1 = db.Column(db.String)
-    ad_str2 = db.Column(db.String)
-    ad_str3 = db.Column(db.String)
-    ad_city = db.Column(db.String)
-    ad_st = db.Column(db.String)
-    ad_zip5 = db.Column(db.String)
-    ad_cntry = db.Column(db.String)
+    address = db.Column(db.String)
     document = db.Column(TSVECTOR)
+    city = db.Column(db.String)
+    state = db.Column(db.String)
 
     @hybrid_property
-    def address(self):
-        st1 = check_empty(self.ad_str1)
-        st2 = check_empty(self.ad_str2)
-        st3 = check_empty(self.ad_str3)
-        city = check_empty(self.ad_city)
-        state = check_empty(self.ad_st, default='', post=' ')
-        zipcode = check_empty(self.ad_zip5, default='', post=' ')
-        country = check_empty(self.ad_cntry, default='', post='')
-        return "{}{}{}{}{}{}{}".format(st1, st2, st3, city, state, zipcode, country)
+    def city_state(self):
+        if self.city and self.state:
+            return "{}, {}".format(self.city, self.state)
+        else:
+            return ""
+
+    # @hybrid_property
+    # def address(self):
+    #     st1 = check_empty(self.ad_str1)
+    #     st2 = check_empty(self.ad_str2)
+    #     st3 = check_empty(self.ad_str3)
+    #     city = check_empty(self.ad_city)
+    #     state = check_empty(self.ad_st, default='', post=' ')
+    #     zipcode = check_empty(self.ad_zip5, default='', post=' ')
+    #     country = check_empty(self.ad_cntry, default='', post='')
+    #     return "{}{}{}{}{}{}{}".format(st1, st2, st3, city, state, zipcode, country)
 
 
 class BusMaster(db.Model):

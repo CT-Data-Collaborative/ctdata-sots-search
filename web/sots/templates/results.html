@@ -30,10 +30,24 @@
 {% block js %}
     {{ super()}}
     <script>
+        var sort_by = "{{ q_obj.sort_by }}";
+        var sort_order = "{{ q_obj.sort_order }}";
+
         $(document).ready(function () {
             $('.sortable-header').click(function() {
+                var currentSort = document.getElementById('sort_by').value;
                 var sortBy = $(this).data().sortBy;
-                document.getElementById('sort_by').value = sortBy;
+                var sortOrder = document.getElementById('sort_order').value;
+                if (currentSort == sortBy) {
+                    if (sortOrder == 'asc') {
+                        document.getElementById('sort_order').value = 'desc';
+                    } else {
+                        document.getElementById('sort_order').value = 'asc';
+                    }
+                } else {
+                    document.getElementById('sort_by').value = sortBy;
+                    document.getElementById('sort_order').value = 'asc';
+                }
                 $('form[name=advanced_search]').trigger('submit');
             });
             $('[data-toggle="offcanvas"]').click(function () {

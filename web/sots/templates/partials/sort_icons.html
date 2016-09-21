@@ -1,0 +1,12 @@
+ {% if q_obj.sort_by == sort %}
+    {% if q_obj.sort_order == 'asc' %}
+        <i class="fa fa-sort-asc"></i>
+    {% else %}
+        <i class="fa fa-sort-desc"></i>
+    {% endif %}
+{% else %}
+    <span class="fa-stack">
+        <i class="fa fa-stack-1x fa-sort-asc"></i>
+        <i class="fa fa-stack-1x fa-sort-desc"></i>
+    </span>
+{% endif %}

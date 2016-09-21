@@ -29,7 +29,7 @@
             <div class="search-tweaks">Active businesses only? {{ form.active }}</div>
             <div class="search-tweaks">Select one or more business types: {{ form.business_type }}</div>
             <span><button type='submit' class="btn btn-sots"><i class="fa fa-inverse fa-search"></i></button></span>
-            {{ form.hidden_tag('csrf_token', 'sort_by') }}
+            {{ form.hidden_tag('csrf_token', 'sort_by', 'sort_order') }}
             {% for error in form.query.errors %}
             <span class="help-inline">[{{ error }}]</span><br>
             {% endfor %}

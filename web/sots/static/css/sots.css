@@ -406,6 +406,9 @@ tbody tr:hover {
   td.reg-date {
     min-width: 98px; } }
 
+.sortable-header i.inactive {
+  display: none; }
+
 .top-paginate {
   margin-left: 3rem;
   margin-right: 3rem; }

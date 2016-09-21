@@ -53,3 +53,9 @@ tbody {
     min-width: 98px;
   }
 }
+
+.sortable-header {
+  i.inactive {
+    display:none
+  }
+}

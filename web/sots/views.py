@@ -1,6 +1,6 @@
 from sots import app, db
 from flask import render_template, request, redirect, url_for
-from sqlalchemy import func
+from sqlalchemy import func, desc
 from sots.models import FullTextIndex, BusMaster, Principal, BusFiling, Status, Subtype, Corp, \
     DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust
 from sots.forms import SearchForm, AdvancedSearchForm
@@ -102,6 +102,7 @@ def search_results():
         'index_field': request.args.get('index_field'),
         'active': request.args.get('active'),
         'sort_by': request.args.get('sort_by'),
+        'sort_order': request.args.get('sort_order')
     }
     try:
         q_object['start_date'] = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
@@ -122,7 +123,11 @@ def search_results():
             pass
         else:
             results = results.filter(FullTextIndex.type.in_(q_object['business_type']))
-    results = results.order_by(q_object['sort_by']).paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
+    if q_object['sort_order'] == 'desc':
+        results = results.order_by(desc(q_object['sort_by']))
+    else:
+        results = results.order_by(q_object['sort_by'])
+    results = results.paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
     form = AdvancedSearchForm(**q_object)
     return render_template('results.html', results=results, q_obj=q_object, form=form)
 
@@ -150,6 +155,8 @@ def index():
         return redirect(url_for('search_results',
                                 query=form.query.data,
                                 index_field=form.index_field.data,
+                                sort_by=form.sort_by.data,
+                                sort_order=form.sort_order.data,
                                 page=1))
     return render_template('index.html', form=form)
 
@@ -167,6 +174,7 @@ def advanced():
                                 end_date=form.end_date.data,
                                 active=form.active.data,
                                 sort_by=form.sort_by.data,
+                                sort_order=form.sort_order.data,
                                 page=1))
     return render_template('advanced.html', form=form)
 

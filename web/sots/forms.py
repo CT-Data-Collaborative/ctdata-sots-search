@@ -7,6 +7,7 @@ from datetime import datetime
 class SearchForm(Form):
     query = StringField('Search Term', [validators.Length(max=255)])
     sort_by = HiddenField(default='nm_name')
+    sort_order = HiddenField(default='asc')
     index_field = SelectField('Choices',
                          choices=[
                              ('business_name', 'Business Name'),
@@ -23,6 +24,7 @@ class AdvancedSearchForm(Form):
     start_date_default = datetime.strptime('1990-01-01', '%Y-%m-%d')
     end_date_default = datetime.strptime('2016-08-01', '%Y-%m-%d')
     sort_by = HiddenField(default='nm_name')
+    sort_order = HiddenField(default='asc')
     query = StringField('Search Term', [validators.Length(max=255)])
     index_field = SelectField('Choices',
                          choices=[

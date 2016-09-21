@@ -1,11 +1,36 @@
 <table>
     <thead>
         <!--<th>#</th>-->
-        <th class="sortable-header" data-sort-by="nm_name">Business Name</th>
-        <th class="sortable-header" data-sort-by="dt_origin">Date Registered</th>
-        <th class="sortable-header" data-sort-by="status">Status</th>
-        <th class="sortable-header" data-sort-by="city">Business Address</th>
-        <th class="sortable-header" data-sort-by="city">City/State</th>
+        <th id="name" class="sortable-header sortable-header--alpha sortable-header--sorted-ascending" data-sort-by="nm_name" data-sort-order="asc">
+            {% with sort = 'nm_name' %}
+            {% include 'partials/sort_icons.html' %}
+            {% endwith %}
+            Business Name
+        </th>
+        <th id="registration" class="sortable-header sortable-header--numeric" data-sort-by="dt_origin" data-sort-order="asc">
+            {% with sort = 'dt_origin' %}
+            {% include 'partials/sort_icons.html' %}
+            {% endwith %}
+            Date Registered
+        </th>
+        <th id="status" class="sortable-header sortable-header--alpha" data-sort-by="status" data-sort-order="asc">
+            {% with sort = 'status' %}
+            {% include 'partials/sort_icons.html' %}
+            {% endwith %}
+            Status
+        </th>
+        <th id="address" class="sortable-header sortable-header--alpha" data-sort-by="city" data-sort-order="asc">
+            {% with sort = 'city' %}
+            {% include 'partials/sort_icons.html' %}
+            {% endwith %}
+            Business Address
+        </th>
+        <th id="city" class="sortable-header sortable-header--alpha" data-sort-by="city" data-sort-order="asc">
+            {% with sort = 'city' %}
+            {% include 'partials/sort_icons.html' %}
+            {% endwith %}
+            City/State
+        </th>
     </thead>
     <tbody>
         {% for result in results.items %}

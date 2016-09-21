@@ -1,5 +1,5 @@
 <form action="/" method="post" name="search" class="form-inline sots-form sots-form__basic">
-    {{ form.hidden_tag('csrf_token', 'sort_by') }}
+    {{ form.hidden_tag('csrf_token', 'sort_by', 'sort_order') }}
     <div class="control-group{% if form.query.errors %} error {% endif %}">
         <div class="form-group">
             <span>{{ form.index_field(class_='form-control') }}</span>

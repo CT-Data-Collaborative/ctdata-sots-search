@@ -29,6 +29,9 @@ tbody {
 
     td {
       color: white;
+      a {
+        color: white;
+      }
     }
   }
 }
@@ -55,7 +58,17 @@ tbody {
 }
 
 .sortable-header {
-  i.inactive {
-    display:none
+  .fa-stack {
+    margin-top: -.25rem;
+    width: 1rem;
   }
+
+}
+
+th#registration {
+  min-width: 145px;
+}
+
+th#status {
+  min-width: 120px;
 }

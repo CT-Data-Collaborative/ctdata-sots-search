@@ -389,6 +389,8 @@ tbody tr:hover {
   background-color: #86989B; }
   tbody tr:hover td {
     color: white; }
+    tbody tr:hover td a {
+      color: white; }
 
 .agents, .principals {
   margin-top: 1rem; }
@@ -406,8 +408,15 @@ tbody tr:hover {
   td.reg-date {
     min-width: 98px; } }
 
-.sortable-header i.inactive {
-  display: none; }
+.sortable-header .fa-stack {
+  margin-top: -.25rem;
+  width: 1rem; }
+
+th#registration {
+  min-width: 145px; }
+
+th#status {
+  min-width: 120px; }
 
 .top-paginate {
   margin-left: 3rem;

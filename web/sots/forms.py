@@ -14,8 +14,7 @@ class SearchForm(Form):
                              ('place_of_business_address', 'Business Address'),
                              ('bus_id', 'Business ID'),
                              ('filing_number', 'Filing Number'),
-                             ('principal_name', 'Principal Name'),
-                             ('principal_business_address', 'Principal Address')
+                             ('principal_name', 'Principal Name')
                          ])
 
 
@@ -32,8 +31,7 @@ class AdvancedSearchForm(Form):
                              ('place_of_business_address', 'Business Address'),
                              ('bus_id', 'Business ID'),
                              ('filing_number', 'Filing Number'),
-                             ('principal_name', 'Principal Name'),
-                             ('principal_business_address', 'Principal Address')
+                             ('principal_name', 'Principal Name')
                          ])
     start_date = DateField('Start Date', format='%Y-%m-%d', default=start_date_default,
                            validators=[validators.optional()])

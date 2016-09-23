@@ -13,3 +13,4 @@ Flask-WTF==0.9.5
 WTForms==2.1
 pytest
 pytest-cov
+flask-debugtoolbar

@@ -16,6 +16,7 @@ class BaseConfig(object):
     )
     # pagination
     RESULTS_PER_PAGE = 25
+    DEBUG_TB_PROFILER_ENABLED = True
 
 
 class TestConfig(object):

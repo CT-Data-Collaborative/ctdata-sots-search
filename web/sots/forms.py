@@ -33,6 +33,7 @@ class AdvancedSearchForm(Form):
                              ('filing_number', 'Filing Number'),
                              ('principal_name', 'Principal Name')
                          ])
+    index_limit = BooleanField(widget=HiddenInput())
     start_date = DateField('Start Date', format='%Y-%m-%d', default=start_date_default,
                            validators=[validators.optional()])
     end_date = DateField('End Date', format='%Y-%m-%d', default=end_date_default,

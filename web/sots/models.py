@@ -10,6 +10,26 @@ def camel_to_underscore(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
+class FullTextCompositeIndex(db.Model):
+    __tablename__ = 'busmaster_composite_index'
+    id_bus = db.Column(db.String)
+    nm_name = db.Column(db.String)
+    dt_origin = db.Column(db.DateTime)
+    type = db.Column(db.String)
+    status = db.Column(db.String)
+    address = db.Column(db.String)
+    address1 = db.Column(TSVECTOR)
+    address2 = db.Column(TSVECTOR)
+    name = db.Column(TSVECTOR)
+    city = db.Column(db.String)
+    state = db.Column(db.String)
+
+    @hybrid_property
+    def city_state(self):
+        if self.city and self.state:
+            return "{}, {}".format(self.city, self.state)
+        else:
+            return ""
 
 class FullTextIndex(db.Model):
     __tablename__ = 'full_text_index'

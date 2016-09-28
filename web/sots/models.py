@@ -12,7 +12,7 @@ def camel_to_underscore(name):
 
 class FullTextCompositeIndex(db.Model):
     __tablename__ = 'busmaster_composite_index'
-    id_bus = db.Column(db.String)
+    id_bus = db.Column(db.String, primary_key=True)
     nm_name = db.Column(db.String)
     dt_origin = db.Column(db.DateTime)
     type = db.Column(db.String)

@@ -1,7 +1,7 @@
 from sots import app, db
 from flask import render_template, request, redirect, url_for
-from sqlalchemy import func, desc
-from sots.models import FullTextIndex, BusMaster, Principal, BusFiling, Status, Subtype, Corp, \
+from sqlalchemy import func, desc, or_
+from sots.models import FullTextIndex, FullTextCompositeIndex, BusMaster, Principal, BusFiling, Status, Subtype, Corp, \
     DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust
 from sots.forms import SearchForm, AdvancedSearchForm
 from sots.config import BaseConfig as ConfigObject
@@ -99,6 +99,7 @@ def search_results():
     page = int(request.args.get('page'))
     q_object = {
         'query': request.args.get('query'),
+        'query_limit': request.args.get('query_limit'),
         'index_field': request.args.get('index_field'),
         'active': request.args.get('active'),
         'sort_by': request.args.get('sort_by'),
@@ -112,17 +113,39 @@ def search_results():
         q_object['end_date'] = datetime.now()
     q_object['business_type'] = request.args.getlist('business_type')
     tq = func.plainto_tsquery('english', q_object['query'])
-    results = FullTextIndex.query.filter(FullTextIndex.index_name == q_object['index_field']). \
-        filter(FullTextIndex.document.op('@@')(tq))
-    if q_object['active']:
-        results = results.filter(FullTextIndex.status == 'Active')
-    if q_object['start_date'] and q_object['end_date']:
-        results = results.filter(FullTextIndex.dt_origin.between(q_object['start_date'], q_object['end_date']))
-    if q_object['business_type']:
-        if q_object['business_type'] == ['All Entities']:
-            pass
+    if len(q_object['query_limit']) > 0:
+        tql = func.plainto_tsquery('english', q_object['query_limit'])
+        if q_object['index_field'] == 'business_name':
+            address = tql
+            name = tq
         else:
-            results = results.filter(FullTextIndex.type.in_(q_object['business_type']))
+            address = tq
+            name = tql
+        results = FullTextCompositeIndex.query.filter(FullTextCompositeIndex.name.op('@@')(name)).\
+            filter(or_(FullTextCompositeIndex.address1.op('@@')(address),
+                       FullTextCompositeIndex.address2.op('@@')(address)))
+        if q_object['active']:
+            results = results.filter(FullTextCompositeIndex.status == 'Active')
+        if q_object['start_date'] and q_object['end_date']:
+            results = results.filter(FullTextCompositeIndex.dt_origin.between(q_object['start_date'], q_object['end_date']))
+        if q_object['business_type']:
+            if q_object['business_type'] == ['All Entities']:
+                pass
+            else:
+                results = results.filter(FullTextCompositeIndex.type.in_(q_object['business_type']))
+
+    else:
+        results = FullTextIndex.query.filter(FullTextIndex.index_name == q_object['index_field']). \
+            filter(FullTextIndex.document.op('@@')(tq))
+        if q_object['active']:
+            results = results.filter(FullTextIndex.status == 'Active')
+        if q_object['start_date'] and q_object['end_date']:
+            results = results.filter(FullTextIndex.dt_origin.between(q_object['start_date'], q_object['end_date']))
+        if q_object['business_type']:
+            if q_object['business_type'] == ['All Entities']:
+                pass
+            else:
+                results = results.filter(FullTextIndex.type.in_(q_object['business_type']))
     if q_object['sort_order'] == 'desc':
         results = results.order_by(desc(q_object['sort_by']))
     else:
@@ -168,6 +191,7 @@ def advanced():
     if form.validate_on_submit():
         return redirect(url_for('search_results',
                                 query=form.query.data,
+                                query_limit=form.query_limit.data,
                                 index_field=form.index_field.data,
                                 business_type=form.business_type.data,
                                 start_date=form.start_date.data,

@@ -25,6 +25,7 @@ class AdvancedSearchForm(Form):
     sort_by = HiddenField(default='nm_name')
     sort_order = HiddenField(default='asc')
     query = StringField('Search Term', [validators.Length(max=255)])
+    query_limit = StringField('Search Term Limit', [validators.Length(max=255), validators.optional()])
     index_field = SelectField('Choices',
                          choices=[
                              ('business_name', 'Business Name'),

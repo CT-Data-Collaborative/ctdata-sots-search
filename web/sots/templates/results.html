@@ -29,6 +29,7 @@
 {% endblock %}
 {% block js %}
     {{ super()}}
+    <script src="/static/js/form.js"></script>
     <script>
         var sort_by = "{{ q_obj.sort_by }}";
         var sort_order = "{{ q_obj.sort_order }}";

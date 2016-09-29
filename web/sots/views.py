@@ -96,113 +96,7 @@ def get_latest_report(bus_id):
     else:
         return "No Reports Found"
 
-@app.route('/search_results', methods=['GET'])
-def search_results():
-    page = int(request.args.get('page'))
-    q_object = {
-        'query': request.args.get('query'),
-        'query_limit': request.args.get('query_limit'),
-        'index_field': request.args.get('index_field'),
-        'active': request.args.get('active'),
-        'sort_by': request.args.get('sort_by'),
-        'sort_order': request.args.get('sort_order')
-    }
-    try:
-        q_object['start_date'] = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
-        q_object['end_date'] = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')
-    except TypeError:
-        q_object['start_date'] = date(year=1990, month=1, day=1)
-        q_object['end_date'] = datetime.now()
-    q_object['business_type'] = request.args.getlist('business_type')
-    tq = func.plainto_tsquery('english', q_object['query'])
-    if len(q_object['query_limit']) > 0:
-        tql = func.plainto_tsquery('english', q_object['query_limit'])
-        if q_object['index_field'] == 'business_name':
-            address = tql
-            name = tq
-        else:
-            address = tq
-            name = tql
-        results = FullTextCompositeIndex.query.filter(FullTextCompositeIndex.name.op('@@')(name)).\
-            filter(or_(FullTextCompositeIndex.address1.op('@@')(address),
-                       FullTextCompositeIndex.address2.op('@@')(address)))
-        if q_object['active']:
-            results = results.filter(FullTextCompositeIndex.status == 'Active')
-        if q_object['start_date'] and q_object['end_date']:
-            results = results.filter(FullTextCompositeIndex.dt_origin.between(q_object['start_date'], q_object['end_date']))
-        if q_object['business_type']:
-            if q_object['business_type'] == ['All Entities']:
-                pass
-            else:
-                results = results.filter(FullTextCompositeIndex.type.in_(q_object['business_type']))
-
-    else:
-        results = FullTextIndex.query.filter(FullTextIndex.index_name == q_object['index_field']). \
-            filter(FullTextIndex.document.op('@@')(tq))
-        if q_object['active']:
-            results = results.filter(FullTextIndex.status == 'Active')
-        if q_object['start_date'] and q_object['end_date']:
-            results = results.filter(FullTextIndex.dt_origin.between(q_object['start_date'], q_object['end_date']))
-        if q_object['business_type']:
-            if q_object['business_type'] == ['All Entities']:
-                pass
-            else:
-                results = results.filter(FullTextIndex.type.in_(q_object['business_type']))
-    if q_object['sort_order'] == 'desc':
-        results = results.order_by(desc(q_object['sort_by']))
-    else:
-        results = results.order_by(q_object['sort_by'])
-    results = results.paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
-    form = AdvancedSearchForm(**q_object)
-    return render_template('results.html', results=results, q_obj=q_object, form=form)
-
-
-@app.route('/business/<id>', methods=['GET'])
-def detail(id):
-    result = BusMaster.query.filter(BusMaster.id_bus == str(id)).first()
-    try:
-        domesticity = domesticity_lookup(result.id_bus, result.cd_subtype)
-    except AttributeError:
-        return redirect(url_for('index'))
-    principals = Principal.query.filter(Principal.id_bus == str(id)).all()
-    report = get_latest_report(id)
-    return render_template('results_detail.html',
-                           result=result,
-                           report=report,
-                           principals=principals,
-                           domesticity=domesticity,
-                           results_page=redirect_url())
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    form = SearchForm()
-    if form.validate_on_submit():
-        return redirect(url_for('search_results',
-                                query=form.query.data,
-                                index_field=form.index_field.data,
-                                sort_by=form.sort_by.data,
-                                sort_order=form.sort_order.data,
-                                page=1))
-    return render_template('index.html', form=form)
-
-
-
-def iter_csv(**kwargs):
-    q_object = {
-        'query': kwargs['query'],
-        'query_limit': kwargs['query_limit'],
-        'index_field': kwargs['index_field'],
-        'active': kwargs['active'],
-        'sort_by': kwargs['sort_by'],
-        'sort_order': kwargs['sort_order']
-    }
-    try:
-        q_object['start_date'] = datetime.strptime(kwargs['start_date'], '%Y-%m-%d')
-        q_object['end_date'] = datetime.strptime(kwargs['end_date'], '%Y-%m-%d')
-    except TypeError:
-        q_object['start_date'] = date(year=1990, month=1, day=1)
-        q_object['end_date'] = datetime.now()
-    q_object['business_type'] = kwargs['business_type']
+def query(q_object):
     tq = func.plainto_tsquery('english', q_object['query'])
     if len(q_object['query_limit']) > 0:
         tql = func.plainto_tsquery('english', q_object['query_limit'])
@@ -242,16 +136,90 @@ def iter_csv(**kwargs):
         results = results.order_by(desc(q_object['sort_by']))
     else:
         results = results.order_by(q_object['sort_by'])
-    line = StringIO()
-    writer = csv.DictWriter(line, fieldnames=['name', 'id', 'origin date', 'status', 'type', 'address'])
-    writer.writeheader()
-    for biz in results.all():
-        row = {'name': biz.nm_name, 'id': biz.id_bus, 'origin date': biz.dt_origin, 'status': biz.status,
-               'type': biz.type, 'address': biz.address}
-        writer.writerow(row)
-        line.seek(0)
-        yield line.read()
-        line.truncate(0)
+    return results
+#
+# def iter_csv(**kwargs):
+#     q_object = {
+#         'query': kwargs['query'],
+#         'query_limit': kwargs['query_limit'],
+#         'index_field': kwargs['index_field'],
+#         'active': kwargs['active'],
+#         'sort_by': kwargs['sort_by'],
+#         'sort_order': kwargs['sort_order']
+#     }
+#     try:
+#         q_object['start_date'] = datetime.strptime(kwargs['start_date'], '%Y-%m-%d')
+#         q_object['end_date'] = datetime.strptime(kwargs['end_date'], '%Y-%m-%d')
+#     except TypeError:
+#         q_object['start_date'] = date(year=1990, month=1, day=1)
+#         q_object['end_date'] = datetime.now()
+#     q_object['business_type'] = kwargs['business_type']
+#     results = query(q_object)
+#     line = StringIO()
+#     writer = csv.DictWriter(line, fieldnames=['name', 'id', 'origin date', 'status', 'type', 'address'])
+#     writer.writeheader()
+#     for biz in results.all():
+#         row = {'name': biz.nm_name, 'id': biz.id_bus, 'origin date': biz.dt_origin, 'status': biz.status,
+#                'type': biz.type, 'address': biz.address}
+#         writer.writerow(row)
+#         line.seek(0)
+#         yield line.read()
+#         line.truncate(0)
+#
+
+
+@app.route('/search_results', methods=['GET'])
+def search_results():
+    page = int(request.args.get('page'))
+    q_object = {
+        'query': request.args.get('query'),
+        'query_limit': request.args.get('query_limit'),
+        'index_field': request.args.get('index_field'),
+        'active': request.args.get('active'),
+        'sort_by': request.args.get('sort_by'),
+        'sort_order': request.args.get('sort_order')
+    }
+    try:
+        q_object['start_date'] = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
+        q_object['end_date'] = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')
+    except TypeError:
+        q_object['start_date'] = date(year=1990, month=1, day=1)
+        q_object['end_date'] = datetime.now()
+    q_object['business_type'] = request.args.getlist('business_type')
+    results = query(q_object)
+    results = results.paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
+    form = AdvancedSearchForm(**q_object)
+    return render_template('results.html', results=results, q_obj=q_object, form=form)
+
+
+@app.route('/business/<id>', methods=['GET'])
+def detail(id):
+    result = BusMaster.query.filter(BusMaster.id_bus == str(id)).first()
+    try:
+        domesticity = domesticity_lookup(result.id_bus, result.cd_subtype)
+    except AttributeError:
+        return redirect(url_for('index'))
+    principals = Principal.query.filter(Principal.id_bus == str(id)).all()
+    report = get_latest_report(id)
+    return render_template('results_detail.html',
+                           result=result,
+                           report=report,
+                           principals=principals,
+                           domesticity=domesticity,
+                           results_page=redirect_url())
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    form = SearchForm()
+    if form.validate_on_submit():
+        return redirect(url_for('search_results',
+                                query=form.query.data,
+                                index_field=form.index_field.data,
+                                sort_by=form.sort_by.data,
+                                sort_order=form.sort_order.data,
+                                page=1))
+    return render_template('index.html', form=form)
+
 
 
 @app.route('/download', methods=['POST'])
@@ -259,9 +227,31 @@ def download():
     form = AdvancedSearchForm()
     form.business_type.default = 'All Entities'
     if form.validate_on_submit():
-        response = Response(iter_csv(query=form.query.data, query_limit=form.query_limit.data, index_field=form.index_field.data,
-                 business_type=form.business_type.data, start_date=form.start_date.data, end_date=form.end_date.data,
-                 active=form.active.data, sort_by=form.sort_by.data, sort_order=form.sort_order.data), mimetype='text/csv')
+        q_object = {
+            'query': form.query.data,
+            'query_limit': form.query_limit.data,
+            'index_field': form.index_field.data,
+            'active': form.active.data,
+            'sort_by': form.sort_by.data,
+            'sort_order': form.sort_order.data
+        }
+        try:
+            q_object['start_date'] = datetime.strptime(form.start_date.data, '%Y-%m-%d')
+            q_object['end_date'] = datetime.strptime(form.end_date.data, '%Y-%m-%d')
+        except TypeError:
+            q_object['start_date'] = date(year=1990, month=1, day=1)
+            q_object['end_date'] = datetime.now()
+        q_object['business_type'] = form.business_type.data
+        results = query(q_object)
+        file = StringIO()
+        writer = csv.DictWriter(file, fieldnames=['name', 'id', 'origin date', 'status', 'type', 'address'])
+        writer.writeheader()
+        for biz in results.all():
+            row = {'name': biz.nm_name, 'id': biz.id_bus, 'origin date': biz.dt_origin, 'status': biz.status,
+                   'type': biz.type, 'address': biz.address}
+            writer.writerow(row)
+        file.seek(0)
+        response = Response(file, content_type='text/csv')
         response.headers['Content-Disposition'] = 'attachment; filename=data.csv'
         return response
 
@@ -286,7 +276,6 @@ def advanced():
 
 # Filters for Jinja
 app.template_filter('checknone')(check_none)
-
 
 @app.template_filter('simpledate')
 def simple_date(value, format='%b %d, %Y'):

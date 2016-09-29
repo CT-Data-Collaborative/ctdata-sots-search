@@ -43,7 +43,7 @@
         var selected_index = $('#index_field').val();
         setLimitText(selected_index, '#search-limit');
         setVisibility(selected_index, '#limit-tweaks');
-        clearLimitText();
+        // clearLimitText();
         resetLimitButton();
     }
 
@@ -61,5 +61,4 @@
         toggleLimitButton(this);
     });
     pageInit();
-    console.log('testing')
 })();

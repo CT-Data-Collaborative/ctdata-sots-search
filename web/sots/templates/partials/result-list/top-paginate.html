@@ -1,5 +1,9 @@
 <div class="top-paginate">
     <span class="query-info">Search results for "{{ q_obj.query }}". {{ results.total }} total results found.</span>
+    <form action="{{ url_for('download') }}" method="post" name="download">
+    {% include 'partials/download_form.html' %}
+    <!--<span class="download"><i class="fa fa-download"></i> Download Results</span>-->
+    <!-- /.download -->
         <!--{% if results.total > 0 %}Click on Business Name for more information.{% endif %}</span>-->
     <span class="paginate-navigate">
         {% if results.has_prev %}

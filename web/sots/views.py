@@ -1,5 +1,5 @@
 from sots import app, db
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, Response
 from sqlalchemy import func, desc, or_
 from sots.models import FullTextIndex, FullTextCompositeIndex, BusMaster, Principal, BusFiling, Status, Subtype, Corp, \
     DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust
@@ -8,6 +8,8 @@ from sots.config import BaseConfig as ConfigObject
 from sots.helpers import corp_type_lookup, origin_lookup, category_lookup
 from sots.helpers import check_empty as check_none
 from datetime import datetime, date
+from io import StringIO
+import csv
 
 def corp_domesticity(bus_id):
     r = Corp.query.filter(Corp.id_bus == str(bus_id)).first()
@@ -182,6 +184,86 @@ def index():
                                 sort_order=form.sort_order.data,
                                 page=1))
     return render_template('index.html', form=form)
+
+
+
+def iter_csv(**kwargs):
+    q_object = {
+        'query': kwargs['query'],
+        'query_limit': kwargs['query_limit'],
+        'index_field': kwargs['index_field'],
+        'active': kwargs['active'],
+        'sort_by': kwargs['sort_by'],
+        'sort_order': kwargs['sort_order']
+    }
+    try:
+        q_object['start_date'] = datetime.strptime(kwargs['start_date'], '%Y-%m-%d')
+        q_object['end_date'] = datetime.strptime(kwargs['end_date'], '%Y-%m-%d')
+    except TypeError:
+        q_object['start_date'] = date(year=1990, month=1, day=1)
+        q_object['end_date'] = datetime.now()
+    q_object['business_type'] = kwargs['business_type']
+    tq = func.plainto_tsquery('english', q_object['query'])
+    if len(q_object['query_limit']) > 0:
+        tql = func.plainto_tsquery('english', q_object['query_limit'])
+        if q_object['index_field'] == 'business_name':
+            address = tql
+            name = tq
+        else:
+            address = tq
+            name = tql
+        results = FullTextCompositeIndex.query.filter(FullTextCompositeIndex.name.op('@@')(name)). \
+            filter(or_(FullTextCompositeIndex.address1.op('@@')(address),
+                       FullTextCompositeIndex.address2.op('@@')(address)))
+        if q_object['active']:
+            results = results.filter(FullTextCompositeIndex.status == 'Active')
+        if q_object['start_date'] and q_object['end_date']:
+            results = results.filter(
+                FullTextCompositeIndex.dt_origin.between(q_object['start_date'], q_object['end_date']))
+        if q_object['business_type']:
+            if q_object['business_type'] == ['All Entities']:
+                pass
+            else:
+                results = results.filter(FullTextCompositeIndex.type.in_(q_object['business_type']))
+
+    else:
+        results = FullTextIndex.query.filter(FullTextIndex.index_name == q_object['index_field']). \
+            filter(FullTextIndex.document.op('@@')(tq))
+        if q_object['active']:
+            results = results.filter(FullTextIndex.status == 'Active')
+        if q_object['start_date'] and q_object['end_date']:
+            results = results.filter(FullTextIndex.dt_origin.between(q_object['start_date'], q_object['end_date']))
+        if q_object['business_type']:
+            if q_object['business_type'] == ['All Entities']:
+                pass
+            else:
+                results = results.filter(FullTextIndex.type.in_(q_object['business_type']))
+    if q_object['sort_order'] == 'desc':
+        results = results.order_by(desc(q_object['sort_by']))
+    else:
+        results = results.order_by(q_object['sort_by'])
+    line = StringIO()
+    writer = csv.DictWriter(line, fieldnames=['name', 'id', 'origin date', 'status', 'type', 'address'])
+    writer.writeheader()
+    for biz in results.all():
+        row = {'name': biz.nm_name, 'id': biz.id_bus, 'origin date': biz.dt_origin, 'status': biz.status,
+               'type': biz.type, 'address': biz.address}
+        writer.writerow(row)
+        line.seek(0)
+        yield line.read()
+        line.truncate(0)
+
+
+@app.route('/download', methods=['POST'])
+def download():
+    form = AdvancedSearchForm()
+    form.business_type.default = 'All Entities'
+    if form.validate_on_submit():
+        response = Response(iter_csv(query=form.query.data, query_limit=form.query_limit.data, index_field=form.index_field.data,
+                 business_type=form.business_type.data, start_date=form.start_date.data, end_date=form.end_date.data,
+                 active=form.active.data, sort_by=form.sort_by.data, sort_order=form.sort_order.data), mimetype='text/csv')
+        response.headers['Content-Disposition'] = 'attachment; filename=data.csv'
+        return response
 
 
 @app.route('/advanced_search', methods=['GET', 'POST'])

@@ -1,0 +1,18 @@
+<form action="{{ url_for('download') }}" method="post" name="download">
+    <span><button type='submit' class="btn btn-sots"><i class="fa fa-inverse fa-download"></i> Download Results</button></span>
+    <div class="hidden{% if form.query.errors %} error {% endif %}">
+        <div class="form-group">
+            {{ form.index_field }}
+            {{ form.query}}
+            {{ form.query_limit }}
+            {{ form.start_date }}
+            {{ form.end_date }}
+            {{ form.active }}
+            {{ form.business_type }}
+            {{ form.hidden_tag('csrf_token', 'sort_by', 'sort_order') }}
+            {% for error in form.query.errors %}
+            <span class="help-inline">[{{ error }}]</span><br>
+            {% endfor %}
+        </div>
+    </div>
+</form>

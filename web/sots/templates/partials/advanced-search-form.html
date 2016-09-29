@@ -6,8 +6,8 @@
                 <p><span class="input-label">For</span> {{ form.query(size=30, placeholder='Enter term to search for...') }}</p>
             </div>
             <div id="limit-tweaks" class="search-tweaks">
-                <p><i id="limit-button" class="fa fa-plus-circle"></i><span id="search-limit">Narrow search by address?</span></p>
-                <p id="limit-by-field" class="hidden">
+                <p><i id="limit-button" class="fa fa-minus-circle"></i><span id="search-limit">Narrow search by address?</span></p>
+                <p id="limit-by-field" class="">
                     {{ form.query_limit(size=30, placeholder='Limit by...') }}
                 </p>
                 <!-- /.hidden -->

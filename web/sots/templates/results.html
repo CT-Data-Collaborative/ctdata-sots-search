@@ -1,6 +1,7 @@
 {% extends "_base.html" %}
 {% set start_date = q_obj.pop('start_date').strftime('%Y-%m-%d') %}
 {% set end_date = q_obj.pop('end_date').strftime('%Y-%m-%d') %}
+{% set q_limit = q_obj.pop('query_limit') %}
 {% block content %}
     <div class="row row-offcanvas row-offcanvas-left">
         <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 sidebar sidebar-offcanvas" id="sidebar">
@@ -34,23 +35,12 @@
         var sort_by = "{{ q_obj.sort_by }}";
         var sort_order = "{{ q_obj.sort_order }}";
 
+
         $(document).ready(function () {
             // download click handler
-
-//            function get_form_data() {
-//                return $('form[name=advanced_search]').serializeArray();
-//
-//            };
-
-//            $('form[name=download]').submit(function() {
-//                var data = get_form_data();
-//                data.forEach(function(d) {
-//                    var lookup = "form[name=download] #" + d.name;
-//                    document.querySelector(lookup).value = d.value;
-//                });
-//                console.log($('form[name=advanced_search]').serializeArray(););
-//                return true;
-//            });
+            // form not being populated w query_limit field...hacky workaround
+            document.querySelector('form[name=download] #query_limit').value = "{{ q_limit }}";
+            document.querySelector('form[name=advanced_search] #query_limit').value = "{{ q_limit }}";
 
             // table header clilck handlers
             $('.sortable-header').click(function() {

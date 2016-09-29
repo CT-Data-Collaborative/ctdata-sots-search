@@ -137,35 +137,6 @@ def query(q_object):
     else:
         results = results.order_by(q_object['sort_by'])
     return results
-#
-# def iter_csv(**kwargs):
-#     q_object = {
-#         'query': kwargs['query'],
-#         'query_limit': kwargs['query_limit'],
-#         'index_field': kwargs['index_field'],
-#         'active': kwargs['active'],
-#         'sort_by': kwargs['sort_by'],
-#         'sort_order': kwargs['sort_order']
-#     }
-#     try:
-#         q_object['start_date'] = datetime.strptime(kwargs['start_date'], '%Y-%m-%d')
-#         q_object['end_date'] = datetime.strptime(kwargs['end_date'], '%Y-%m-%d')
-#     except TypeError:
-#         q_object['start_date'] = date(year=1990, month=1, day=1)
-#         q_object['end_date'] = datetime.now()
-#     q_object['business_type'] = kwargs['business_type']
-#     results = query(q_object)
-#     line = StringIO()
-#     writer = csv.DictWriter(line, fieldnames=['name', 'id', 'origin date', 'status', 'type', 'address'])
-#     writer.writeheader()
-#     for biz in results.all():
-#         row = {'name': biz.nm_name, 'id': biz.id_bus, 'origin date': biz.dt_origin, 'status': biz.status,
-#                'type': biz.type, 'address': biz.address}
-#         writer.writerow(row)
-#         line.seek(0)
-#         yield line.read()
-#         line.truncate(0)
-#
 
 
 @app.route('/search_results', methods=['GET'])

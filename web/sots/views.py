@@ -144,12 +144,15 @@ def search_results():
     page = int(request.args.get('page'))
     q_object = {
         'query': request.args.get('query'),
-        'query_limit': request.args.get('query_limit'),
         'index_field': request.args.get('index_field'),
         'active': request.args.get('active'),
         'sort_by': request.args.get('sort_by'),
         'sort_order': request.args.get('sort_order')
     }
+    if request.args.get('query_limit') is not None:
+        q_object['query_limit'] = request.args.get('query_limit')
+    else:
+        q_object['query_limit'] = ''
     try:
         q_object['start_date'] = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
         q_object['end_date'] = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')

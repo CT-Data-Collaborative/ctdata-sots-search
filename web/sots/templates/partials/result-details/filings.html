@@ -1,0 +1,24 @@
+{% if filings %}
+<p class='table-name'>Filings Details <i class="fa fa-plus-circle button--toggle" data-target="filings"></i></p>
+<table id="filings" class="hidden">
+    <thead>
+        <tr>
+            <th>Filing ID</th>
+            <th>Filing Type</th>
+            <th>Date of Filing</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for filing in filings %}
+        <tr>
+            <td>{{ filing.id_bus_flng }}</td>
+            <td>{{ filing.tx_certif }}</td>
+            <td>{{ filing.dt_filing }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<H2>NO FILINGS</H2>
+{% endif %}
+<!-- /.filings -->

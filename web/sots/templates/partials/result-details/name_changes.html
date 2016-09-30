@@ -1,0 +1,21 @@
+<p class='table-name'>Name Changes</p>
+<table class="name-changes">
+    <thead>
+        <tr>
+            <th>Filing Number</th>
+            <th>Old Name</th>
+            <th>New Name</th>
+            <th>Date of Name Change</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for name_change in name_change %}
+        <tr>
+            <td>{{ name_change.id_bus_flng }}</td>
+            <td>{{ name_change.nm_old }}</td>
+            <td>{{ name_change.nm_new }}</td>
+            <td>{{ name_change.dt_changed }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

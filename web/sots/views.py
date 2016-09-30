@@ -2,7 +2,7 @@ from sots import app, db
 from flask import render_template, request, redirect, url_for, Response
 from sqlalchemy import func, desc, or_
 from sots.models import FullTextIndex, FullTextCompositeIndex, BusMaster, Principal, BusFiling, Status, Subtype, Corp, \
-    DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust
+    DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust, NameChange
 from sots.forms import SearchForm, AdvancedSearchForm
 from sots.config import BaseConfig as ConfigObject
 from sots.helpers import corp_type_lookup, origin_lookup, category_lookup
@@ -174,12 +174,16 @@ def detail(id):
     except AttributeError:
         return redirect(url_for('index'))
     principals = Principal.query.filter(Principal.id_bus == str(id)).all()
+    filings = BusFiling.query.filter(BusFiling.id_bus == str(id)).order_by(desc(BusFiling.dt_filing)).all()
+    name_changes = NameChange.query.filter(NameChange.id_bus == str(id)).order_by(desc(NameChange.dt_changed)).all()
     report = get_latest_report(id)
     return render_template('results_detail.html',
                            result=result,
                            report=report,
                            principals=principals,
                            domesticity=domesticity,
+                           filings=filings,
+                           name_changes=name_changes,
                            results_page=redirect_url())
 
 @app.route('/', methods=['GET', 'POST'])

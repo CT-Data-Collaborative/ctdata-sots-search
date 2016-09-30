@@ -211,3 +211,6 @@ class ForStatTrust(SOTSMixin, db.Model):
 
 class BusOther(SOTSMixin, db.Model):
     pass
+
+class NameChange(SOTSMixin, db.Model):
+    pass

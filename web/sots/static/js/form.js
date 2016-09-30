@@ -61,4 +61,5 @@
         toggleLimitButton(this);
     });
     pageInit();
+    $('[data-toggle="tooltip"]').tooltip();
 })();

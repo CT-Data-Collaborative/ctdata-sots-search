@@ -115,9 +115,17 @@
     background-color: $buttongreen;
   }
   .input-group.date {
-    padding-bottom: 1rem;
+    padding-bottom: .25rem;
   }
   .input-group.date span.input-group-addon {
     min-width: 80px;
+  }
+  .footnote {
+    font-style: italic;
+    font-size: .8rem;
+
+  }
+  .button.button--toggle {
+    padding-right: .25rem;
   }
 }

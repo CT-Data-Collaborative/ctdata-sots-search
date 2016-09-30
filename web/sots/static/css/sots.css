@@ -360,10 +360,17 @@ li.uib-tab.nav-item.active {
   background-color: #0F7C61; }
 
 .sots-form.sots-form--advanced .input-group.date {
-  padding-bottom: 1rem; }
+  padding-bottom: .25rem; }
 
 .sots-form.sots-form--advanced .input-group.date span.input-group-addon {
   min-width: 80px; }
+
+.sots-form.sots-form--advanced .footnote {
+  font-style: italic;
+  font-size: .8rem; }
+
+.sots-form.sots-form--advanced .button.button--toggle {
+  padding-right: .25rem; }
 
 table {
   border-top: solid 2px #1EACF1;

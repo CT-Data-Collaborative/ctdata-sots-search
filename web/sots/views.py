@@ -252,6 +252,15 @@ def advanced():
                                 page=1))
     return render_template('advanced.html', form=form)
 
+
+@app.route('/technical_details', methods=['GET'])
+def technical_details():
+    return render_template('technical_details.html')
+
+@app.route('/feedback', methods=['GET'])
+def feedback():
+    return render_template('feedback.html')
+
 # Filters for Jinja
 app.template_filter('checknone')(check_none)
 

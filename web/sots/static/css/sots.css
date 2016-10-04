@@ -93,7 +93,7 @@ html, body {
   margin-bottom: 1rem; }
 
 .home-internal-no-img, #main {
-  overflow-y: hidden;
+  overflow-y: scroll;
   height: calc(100vh - 5rem); }
 
 .home-internal {
@@ -544,3 +544,11 @@ body {
 
 .breadcrumbs a:hover .fa {
   color: #4670A7; }
+
+.sots-link {
+  border-bottom: 1px dotted #4670A7;
+  text-decoration: none;
+  font-size: inherit; }
+
+.sots-link:hover {
+  text-decoration: none; }

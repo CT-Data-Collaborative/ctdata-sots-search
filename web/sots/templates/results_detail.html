@@ -1,20 +1,9 @@
 {% extends "_base.html" %}
 
 {% block content %}
-<div>
-    <div class="search">
-        <div class="breadcrumbs">
-            <a href="{{ url_for('index') }}"><i class="fa fa-home"></i></a> > <a class="results-back-link" href="{{ results_page }}">Results List</a> > Details
-        </div>
-        <!--<a href="{{ url_for('index') }}">-->
-            <!--<icon class="fa fa-search"></icon>-->
-            <!--Start a new search.-->
-        <!--</a>-->
-        <!--<a class="results-back-link" href="{{ results_page }}">-->
-            <!--<icon class="fa fa-arrow-circle-left"></icon>-->
-            <!--&lt;!&ndash; /.fa fa-arrow-circle-left &ndash;&gt;-->
-            <!--Back to results.-->
-        <!--</a>-->
+<div class="search">
+    <div class="breadcrumbs">
+        <a href="{{ url_for('index') }}"><i class="fa fa-home"></i></a> > <a class="results-back-link" href="{{ results_page }}">Results List</a> > Details
     </div>
 </div>
 <div class="result-detail-table">
@@ -43,6 +32,11 @@
     $('.button--toggle').click(function() {
         var target = '#' + $(this).data('target');
         toggleTableVisibility($(target));
+        if ($(this).hasClass('fa-plus-circle')) {
+            $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle')
+        } else {
+            $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle')
+        }
     });
 </script>
 {% endblock %}

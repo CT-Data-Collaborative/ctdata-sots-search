@@ -13,7 +13,7 @@ html, body {
 
 .home-internal-no-img, #main {
   //background: $extra-light-grey;
-  overflow-y: hidden;
+  overflow-y: scroll;
   height: calc(100vh - 5rem);
 }
 

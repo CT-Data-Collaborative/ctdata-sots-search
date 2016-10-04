@@ -23,6 +23,11 @@
     </div>
     {% include 'partials/footer.html' %}
     <!-- scripts -->
+    {% if config.DEBUG %}
+      <script>console.log('development mode. analytics not loading');</script>
+    {% else %}
+      {% include 'partial/analytics.html' %}
+    {% endif %}
      {% block js %}
       <script src="/static/js/libs/jquery.min.js"></script>
       <script src="/static/js/libs/bootstrap.min.js"></script>

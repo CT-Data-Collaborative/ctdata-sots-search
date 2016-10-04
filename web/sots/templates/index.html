@@ -4,57 +4,31 @@
     <div class="hero">
     </div>
     {% include 'partials/intro.html' %}
+    <div class="row white">
+        <div class="col-sm-10 col-md-8 col-md-offset-1 col-sm-offset-1">
+            <h3>Welcome to the Connecticut Business Registration Data Search Portal!</h3>
+            <p>Built through a partnership between the <a class="sots-link" href="http://www.sots.ct.gov/sots/site/default.asp">Connecticut Secretary of the State</a> and the <a class="sots-link" href="http://ctdata.org">Connecticut Data
+                Collaborative</a>, this portal allows for full-text searching and downloading of business registration
+                records.
+            </p>
+            <p>To get started, use the form below to search for businesses by name, address, business id or
+                filing number.
+            </p>
+        </div>
+    </div>
     <div class="row light-grey">
         <div class="col-sm-10 col-sm-offset-1">
             {% include 'partials/search-form.html' %}
-            <!--<div class="well">-->
-                <!---->
-                <!--&lt;!&ndash; /.form-horizontal &ndash;&gt;-->
-            <!--</div>-->
-            <!-- /.well -->
         </div>
-        <!-- /.col-sm-8 col-sm-offset-2 -->
     </div>
-    <!-- /.row -->
     <div class="row white">
-        <div class="col-sm-10 col-lg-4 col-sm-offset-1">
-            <div class="card">
-                <div class="icon">
-                    <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-                    <i class="fa fa-sliders fa-stack-1x"></i>
-                </span>
-                </div>
-                <div class="advanced-search">
-                    <a href="{{ url_for('advanced') }}"><h3>Advanced search</h3></a>
-                    <p>Execute more complex searches.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-10 col-lg-4 col-sm-offset-1">
-            <div class="card">
-                <div class="icon">
-                    <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-                    <i class="fa fa-map fa-stack-1x"></i>
-                </span>
-                </div>
-                <div class="advanced-search">
-                    <a href="#"><h3>Geo search</h3></a>
-                    <p>Search by geography.</p>
-                </div>
-            </div>
+         <div class="col-sm-10 col-lg-7 col-sm-offset-1">
+            <h4>
+                Use the <a class="sots-link" href="{{ url_for('advanced')}}">advanced search</a>
+                to limit your results by date, business type, business status and more.
+            </h4>
+            <p>To learn more about the data, head over to the <a class="sots-link" href="{{ url_for('technical_details')}}">technical details</a> page.</p>
+            <p>If you have feedback, suggestions, or requests, please use our <a class="sots-link"  href="{{url_for('feedback')}}">feedback</a> page.</p>
         </div>
     </div>
-    <!-- /.row -->
-    <div class="row white">
-        <!--<div class="col-sm-10 col-sm-offset-1">-->
-            <!--<hr>-->
-            <!--<h2>Explore Interactive Visualizations of Business Registration Data.</h2>-->
-            <!--<p>These overviews are visual explorations of trends in the business activity.</p>-->
-        <!--</div>-->
-        <!-- /.col-sm-10 col-sm-offset-1 -->
-    </div>
-    <!-- /.row -->
-
 {% endblock %}

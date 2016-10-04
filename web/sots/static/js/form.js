@@ -57,7 +57,7 @@
         parseIndexChoice();
     });
 
-    $('#limit-button').click(function () {
+    $('.button--toggle').click(function () {
         toggleLimitButton(this);
     });
     pageInit();

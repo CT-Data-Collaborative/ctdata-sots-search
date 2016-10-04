@@ -63,3 +63,4 @@ target/
 .idea
 venv/
 node_modules/
+*.env

@@ -14,3 +14,4 @@ WTForms==2.1
 pytest
 pytest-cov
 flask-debugtoolbar
+opbeat[flask]

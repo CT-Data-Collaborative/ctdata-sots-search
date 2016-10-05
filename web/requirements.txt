@@ -15,3 +15,4 @@ pytest
 pytest-cov
 flask-debugtoolbar
 opbeat[flask]
+requests

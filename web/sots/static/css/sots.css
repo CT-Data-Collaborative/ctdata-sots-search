@@ -372,6 +372,11 @@ li.uib-tab.nav-item.active {
 .sots-form.sots-form--advanced .button.button--toggle {
   padding-right: .25rem; }
 
+.form-textarea {
+  display: block;
+  width: 50%;
+  height: 7rem; }
+
 table {
   border-top: solid 2px #1EACF1;
   border-bottom: solid 2px #1EACF1;

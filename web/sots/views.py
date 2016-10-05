@@ -3,13 +3,15 @@ from flask import render_template, request, redirect, url_for, Response
 from sqlalchemy import func, desc, or_
 from sots.models import FullTextIndex, FullTextCompositeIndex, BusMaster, Principal, BusFiling, Status, Subtype, Corp, \
     DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust, NameChange
-from sots.forms import SearchForm, AdvancedSearchForm
+from sots.forms import SearchForm, AdvancedSearchForm, FeedbackForm
 from sots.config import BaseConfig as ConfigObject
 from sots.helpers import corp_type_lookup, origin_lookup, category_lookup
 from sots.helpers import check_empty as check_none
 from datetime import datetime, date
 from io import StringIO
 import csv
+import requests
+import json
 
 def corp_domesticity(bus_id):
     r = Corp.query.filter(Corp.id_bus == str(bus_id)).first()
@@ -257,9 +259,39 @@ def advanced():
 def technical_details():
     return render_template('technical_details.html')
 
-@app.route('/feedback', methods=['GET'])
+
+def to_markup(form):
+    text = "## Goal: \n{}\n".format(form.goal.data)
+    text += "## General Feedback: \n{}\n".format(form.general.data)
+    text += "## Details: \n - {}".format(form.user_agent.data)
+    return text
+
+def create_github_issue(form):
+    '''Create an issue on github.com using the given parameters.'''
+    # Our url to create issues via POST
+    url = 'https://api.github.com/repos/%s/%s/issues' % (ConfigObject.GITHUB_OWNER, ConfigObject.GITHUB_REPO)
+    headers = {'Authorization': 'token %s' % ConfigObject.GITHUB_TOKEN}
+    # Create our issue
+    issue = {'title': form.goal.data,
+             'body': to_markup(form),
+             'labels': ['site feedback']}
+    # Add the issue to our repository
+    return requests.post(url, data=json.dumps(issue), headers=headers)
+
+
+@app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
-    return render_template('feedback.html')
+    repo = ConfigObject.GITHUB_REPO
+    owner = ConfigObject.GITHUB_OWNER
+    agent = request.headers.get('User-Agent')
+    form = FeedbackForm(user_agent=agent)
+    if form.validate_on_submit():
+        r = create_github_issue(form)
+        if r.status_code == 201:
+            return render_template('feedback_confirm.html', url=r.json()['html_url'])
+        else:
+            return render_template('feedback.html', form=form, repo=repo, owner=owner)
+    return render_template('feedback.html', form=form, repo=repo, owner=owner)
 
 # Filters for Jinja
 app.template_filter('checknone')(check_none)
@@ -269,3 +301,6 @@ def simple_date(value, format='%b %d, %Y'):
     # try:
     return value.strftime(format)
 
+
+issue = {'title': 'test',
+         'body': 'test issue'}

@@ -23,10 +23,10 @@
     </div>
     {% include 'partials/footer.html' %}
     <!-- scripts -->
-    {% if config.DEBUG %}
+    {% if config.DEBUG == True %}
       <script>console.log('development mode. analytics not loading');</script>
     {% else %}
-      {% include 'partial/analytics.html' %}
+      {% include 'partials/analytics.html' %}
     {% endif %}
      {% block js %}
       <script src="/static/js/libs/jquery.min.js"></script>

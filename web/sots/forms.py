@@ -2,7 +2,7 @@ from flask_wtf import Form
 from wtforms import StringField, SelectField, SelectMultipleField, BooleanField, validators, DateField, HiddenField
 # from wtforms.fields.html5 import DateField
 from datetime import datetime
-
+from wtforms.widgets import TextArea
 
 class SearchForm(Form):
     query = StringField('Search Term', [validators.Length(max=255)])
@@ -68,3 +68,13 @@ class AdvancedSearchForm(Form):
                                                  ('Domestic Insurance Stock', 'Domestic Insurance Stock'),
                                                  ('Domestic Insurance Non-Stock', 'Domestic Insurance Non-Stock'),
                                                  ('Benefit Corporation', 'Benefit Corporation')])
+
+
+class FeedbackForm(Form):
+    goal_label = 'What were you trying to do and how can we improve it?*'
+    general_label = 'General Feedback'
+    submitter_label = 'Tell us about yourself'
+    goal = StringField(goal_label, [validators.required()], widget=TextArea())
+    general = StringField(general_label, widget=TextArea())
+    submitter = StringField(submitter_label, widget=TextArea())
+    user_agent = HiddenField('user-agent', [validators.required()])

@@ -17,6 +17,9 @@ class BaseConfig(object):
     OPBEAT_ORG_ID = os.environ['OPBEAT_ORGANIZATIONAL_ID']
     OPBEAT_APP_ID = os.environ['OPBEAT_APP_ID']
     OPBEAT_SECRET = os.environ['OPBEAT_SECRET_TOKEN']
+    GITHUB_TOKEN = os.environ['GITHUB_ISSUE_TOKEN']
+    GITHUB_REPO = os.environ['GITHUB_REPO']
+    GITHUB_OWNER = os.environ['GITHUB_OWNER']
     # pagination
     RESULTS_PER_PAGE = 25
     DEBUG_TB_PROFILER_ENABLED = os.environ['DEBUG']

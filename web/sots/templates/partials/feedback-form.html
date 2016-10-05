@@ -2,10 +2,9 @@
     <div class="control-group">
         <fieldset>
             <h3>Help us improve the SOTS Business Search Index</h3>
-            <p>Leave feedback here, or email us directly.</p>
+            <p>Leave feedback here, or <a class="sots-link" href="mailto:info@ctdata.org">email us</a> directly.</p>
             <p>If you need to include sensitive information, like your name, contact information or other details
             you would rather keep private, please contact us directly via <a class="sots-link" href="mailto:info@ctdata.org">email</a>.</p>
-
             <div class="form-group">
                 {{ form.goal.label}}
                 {{ form.goal(class='form-textarea')}}
@@ -19,7 +18,7 @@
                 <p class="label-help">
                     I am a
                     <span class="u-black-space"></span>
-                    interested in <span class="u-blank-space"></span>
+                    interested in <span class="u-black-space"></span>
                 </p>
                 {{ form.submitter(class='form-textarea') }}
             </div>
@@ -31,7 +30,7 @@
             on the project GitHub <a class='sots-link' href="https://github.com/{{ owner }}/{{ repo }}/issues">page</a>.</p>
         <p class="note">*Required</p>
         <!-- /.note -->
-        <span><button type='submit' class="btn btn-sots">Submit</button></span>
+        <span><button type='submit' class="btn btn-sots btn-sots-sm">Submit</button></span>
         {{ form.hidden_tag('csrf_token', 'user_agent') }}
     </div>
 </form>

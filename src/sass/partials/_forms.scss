@@ -37,6 +37,7 @@
     border-radius: 4px;
     font-size: 1rem;
     margin-top: .5rem;
+    color: white;
   }
   .input-group.date {
     input {
@@ -134,4 +135,19 @@
   display: block;
   width: 50%;
   height: 7rem;
+}
+
+.u-black-space {
+  display: inline-block;
+  border-bottom: 1px solid $dark-grey;
+  width: 5rem;
+}
+
+.note {
+  font-style: italic;
+}
+
+.label-help {
+  font-style: italic;
+  margin-bottom: 0.5rem;
 }

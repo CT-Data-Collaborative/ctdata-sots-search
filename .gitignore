@@ -64,3 +64,6 @@ target/
 venv/
 node_modules/
 *.env
+
+# System files
+.DS_Store

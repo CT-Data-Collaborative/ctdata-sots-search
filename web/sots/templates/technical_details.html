@@ -1,5 +1,36 @@
 {% extends "_base.html" %}
 
 {% block content %}
-    <h2>Technical Details</h2>
+    <div class="col-sm-10 col-md-8 col-md-offset-1 col-sm-offset-1">
+        {% with current = 'Technical Details' %}
+        {% include 'partials/breadcrumbs.html'%}
+        {% endwith %}
+        <h1>Technical Details</h1>
+        <p>This search functionality provides access to the business registration data companies provide to the
+            Secretary of the State. This application enables a more robust ability to search the data.</p>
+        <h2>Frequently Asked Questions?</h2>
+        <h3>When is the data updated?</h3>
+        <p>Data are updated on the first Tuesday of each month.</p>
+        <h3>How far back does the data go?</h3>
+        <p>The oldest company in the database is from 1803, therefore, the search goes as far back as that year.
+            However, most business dating back to that time are cemeteries and churches, so if you’re doing an
+            advanced search by time, be mindful of the time period used. The more years, the more data, and it
+            will take a bit longer.</p>
+        <h3>What is a foreign company?</h3>
+        <p>A foreign company is a company that is domiciled outside CT – so could be in another state in the United
+            States or outside the U.S.</p>
+        <h3>Where is the industry information?</h3>
+        <p>In the formation filings, businesses are not required to indicate their industry (NAICS code), therefore
+            industry data are not present in this database.</p>
+        <h3>Which address is visible?</h3>
+        <p>In the table of search results, the business address is provided if it is in the record, if not, the mailing
+            address will be listed, and if no address is present in the filings, than an address will not appear in the
+            table.</p>
+        <h3>Is there an API?</h3>
+        <p>Not yet. We are exploring technical issues related to building an API. If you are interested, please leave
+        feedback using our <a class="sots-link" href="{{url_for('feedback')}}">feedback</a> page.</p>
+        <h2>If you have additional questions, please contact us via our
+            <a class="sots-link" href="{{url_for('feedback')}}">feedback</a> page or by
+            <a class="sots-link" href="mailto:info@ctdata.org">emailing</a> us</h2>
+    </div>
 {% endblock %}

@@ -570,3 +570,9 @@ body {
 
 .sots-link:hover {
   text-decoration: none; }
+
+img.sots-logo {
+  height: 8rem;
+  width: auto;
+  float: left;
+  margin: 1rem 1rem 1rem 0; }

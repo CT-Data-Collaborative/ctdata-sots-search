@@ -50,8 +50,12 @@ gulp.task('sass', function() {
      .pipe(gulp.dest('web/sots/static/css'));
 });
 
+gulp.task('images', function() {
+    gulp.src('src/images/*.*')
+        .pipe(gulp.dest('web/sots/static/images'));
+});
 
-gulp.task('depends', ['js_dependencies', 'css_dependencies', 'fonts'], function() {
+gulp.task('depends', ['js_dependencies', 'css_dependencies', 'fonts', 'images'], function() {
 });
 
 gulp.task('default', function() {

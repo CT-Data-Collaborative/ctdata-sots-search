@@ -99,46 +99,64 @@ def get_latest_report(bus_id):
         return "No Reports Found"
 
 def query(q_object):
-    tq = func.plainto_tsquery('english', q_object['query'])
-    if len(q_object['query_limit']) > 0:
-        tql = func.plainto_tsquery('english', q_object['query_limit'])
-        if q_object['index_field'] == 'business_name':
-            address = tql
-            name = tq
+    results = FullTextIndex.query.filter(FullTextIndex.index_name == q_object['index_field'])
+    if q_object['query'] != '':
+        tq = func.plainto_tsquery('english', q_object['query'])
+        results = results.filter(FullTextIndex.document.op('@@')(tq))
+    if q_object['active']:
+        results = results.filter(FullTextIndex.status == 'Active')
+    if q_object['start_date'] and q_object['end_date']:
+        results = results.filter(FullTextIndex.dt_origin >= q_object['start_date']).filter(FullTextIndex.dt_origin <= q_object['end_date'])
+    if q_object['business_type']:
+        if q_object['business_type'] == ['All Entities']:
+            pass
         else:
-            address = tq
-            name = tql
-        results = FullTextCompositeIndex.query.filter(FullTextCompositeIndex.name.op('@@')(name)). \
-            filter(or_(FullTextCompositeIndex.address1.op('@@')(address),
-                       FullTextCompositeIndex.address2.op('@@')(address)))
-        if q_object['active']:
-            results = results.filter(FullTextCompositeIndex.status == 'Active')
-        if q_object['start_date'] and q_object['end_date']:
-            results = results.filter(
-                FullTextCompositeIndex.dt_origin.between(q_object['start_date'], q_object['end_date']))
-        if q_object['business_type']:
-            if q_object['business_type'] == ['All Entities']:
-                pass
-            else:
-                results = results.filter(FullTextCompositeIndex.type.in_(q_object['business_type']))
-
-    else:
-        results = FullTextIndex.query.filter(FullTextIndex.index_name == q_object['index_field']). \
-            filter(FullTextIndex.document.op('@@')(tq))
-        if q_object['active']:
-            results = results.filter(FullTextIndex.status == 'Active')
-        if q_object['start_date'] and q_object['end_date']:
-            results = results.filter(FullTextIndex.dt_origin.between(q_object['start_date'], q_object['end_date']))
-        if q_object['business_type']:
-            if q_object['business_type'] == ['All Entities']:
-                pass
-            else:
-                results = results.filter(FullTextIndex.type.in_(q_object['business_type']))
+            results = results.filter(FullTextIndex.type.in_(q_object['business_type']))
     if q_object['sort_order'] == 'desc':
         results = results.order_by(desc(q_object['sort_by']))
     else:
         results = results.order_by(q_object['sort_by'])
     return results
+    # if len(q_object['query_limit']) > 0:
+    #     tql = func.plainto_tsquery('english', q_object['query_limit'])
+    #     if q_object['index_field'] == 'business_name':
+    #         address = tql
+    #         name = tq
+    #     else:
+    #         address = tq
+    #         name = tql
+    #     results = FullTextIndex.query.filter(FullTextIndex.name.op('@@')(name)). \
+    #         filter(or_(FullTextIndex.address1.op('@@')(address),
+    #                    FullTextIndex.address2.op('@@')(address)))
+    #     if q_object['active']:
+    #         results = results.filter(FullTextIndex.status == 'Active')
+    #     if q_object['start_date'] and q_object['end_date']:
+    #         results = results.filter(
+    #             FullTextIndex.dt_origin >= q_object['start_date']).filter(
+    #             FullTextIndex.dt_origin <= q_object['end_date'])
+    #     if q_object['business_type']:
+    #         if q_object['business_type'] == ['All Entities']:
+    #             pass
+    #         else:
+    #             results = results.filter(FullTextIndex.type.in_(q_object['business_type']))
+
+    # else:
+        # results = FullTextIndex.query.filter(FullTextIndex.index_name == q_object['index_field']). \
+        #     filter(FullTextIndex.document.op('@@')(tq))
+        # if q_object['active']:
+        #     results = results.filter(FullTextIndex.status == 'Active')
+        # if q_object['start_date'] and q_object['end_date']:
+        #     results = results.filter(FullTextIndex.dt_origin >= q_object['start_date']).filter(FullTextIndex.dt_origin <= q_object['end_date'])
+        # if q_object['business_type']:
+        #     if q_object['business_type'] == ['All Entities']:
+        #         pass
+        #     else:
+        #         results = results.filter(FullTextIndex.type.in_(q_object['business_type']))
+    # if q_object['sort_order'] == 'desc':
+    #     results = results.order_by(desc(q_object['sort_by']))
+    # else:
+    #     results = results.order_by(q_object['sort_by'])
+    # return results
 
 
 @app.route('/search_results', methods=['GET'])

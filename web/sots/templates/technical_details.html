@@ -1,6 +1,9 @@
 {% extends "_base.html" %}
 
 {% block content %}
+    <div class="hero">
+    </div>
+    {% include 'partials/intro.html' %}
     <div class="col-sm-10 col-md-8 col-md-offset-1 col-sm-offset-1">
         {% with current = 'Technical Details' %}
         {% include 'partials/breadcrumbs.html'%}

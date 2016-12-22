@@ -8,9 +8,18 @@ gulp.task('build', ['sass'], shell.task([
     'docker-compose build'
 ]));
 
+gulp.task('build-dev', ['sass'], shell.task([
+    'docker-compose -f dev.yml build'
+]));
+
 gulp.task('up', ['build'], shell.task([
     'docker-compose up -d'
 ]));
+
+gulp.task('up-dev', ['build'], shell.task([
+    'docker-compose -f dev.yml up -d'
+]));
+
 
 gulp.task('test', ['build'], shell.task([
    'docker-compose run web py.test -v sots/sots_tests.py'
@@ -62,3 +71,6 @@ gulp.task('default', function() {
     gulp.run('build');
 });
 
+gulp.task('dev', function() {
+    gulp.run('up-dev');
+});

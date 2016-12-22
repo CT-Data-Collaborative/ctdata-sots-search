@@ -12,6 +12,19 @@
     font-size: 1.25rem;
     font-weight: bold;
   }
+  .top-paginate--controls {
+    clear: both;
+    padding-bottom: .5rem;
+    padding-top: .25rem;
+  }
+  .paginater {
+    display: inline-block;
+    float: right;
+    padding-top: 0.5rem;
+  }
+  form {
+    display: inline-block;
+  }
 }
 
 .bottom-paginate {

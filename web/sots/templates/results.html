@@ -5,8 +5,14 @@
 {% block content %}
     <div class="row row-offcanvas row-offcanvas-left">
         <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 sidebar sidebar-offcanvas" id="sidebar">
-            <h4>Refine or revise your search</h4>
+            <h4 style="font-weight: bold">Refine or revise your search</h4>
             {% include 'partials/advanced-search-form.html' %}
+            <div class="visible-sm visible-xs">
+                {% with class='offcanvas' %}
+                    {% include 'partials/download_form.html' %}
+                {% endwith %}
+            </div>
+            <!-- /.display-off-canvas -->
             <p>Do you have <a class='sots-link' href="{{ url_for('feedback') }}">feedback?</a></p>
         </div>
         <!-- /.col-sm-12 col-md-4 -->
@@ -33,6 +39,13 @@
     {{ super()}}
     <script src="/static/js/form.js"></script>
     <script>
+        $(document).ready(function () {
+            $('[data-toggle="offcanvas"]').click(function () {
+                $('.row-offcanvas').toggleClass('active')
+            });
+        });
+    </script>
+    <script>
         var sort_by = "{{ q_obj.sort_by }}";
         var sort_order = "{{ q_obj.sort_order }}";
 
@@ -40,8 +53,8 @@
         $(document).ready(function () {
             // download click handler
             // form not being populated w query_limit field...hacky workaround
-            document.querySelector('form[name=download] #query_limit').value = "{{ q_limit }}";
-            document.querySelector('form[name=advanced_search] #query_limit').value = "{{ q_limit }}";
+//            document.querySelector('form[name=download] #query_limit').value = "{{ q_limit }}";
+//            document.querySelector('form[name=advanced_search] #query_limit').value = "{{ q_limit }}";
 
             // table header clilck handlers
             $('.sortable-header').click(function() {
@@ -59,10 +72,6 @@
                     document.getElementById('sort_order').value = 'asc';
                 }
                 $('form[name=advanced_search]').trigger('submit');
-            });
-            $('[data-toggle="offcanvas"]').click(function () {
-                $('.row-offcanvas').toggleClass('active');
-                $('.maincontent').toggleClass('active');
             });
             $('#start .input-group.date').datepicker({
                 startDate: '1990-01-01',

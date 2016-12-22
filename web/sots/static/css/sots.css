@@ -75,13 +75,6 @@ ul#nav {
 .white {
   background: #fff; }
 
-.btn-sots {
-  background-color: #979797; }
-
-.btn-sots:hover {
-  background-color: #4A4A4A;
-  border-color: #4A4A4A; }
-
 * {
   font: 16px "Roboto Condensed", sans-serif;
   color: #4A4A4A; }
@@ -454,6 +447,16 @@ th#status {
     float: left;
     font-size: 1.25rem;
     font-weight: bold; }
+  .top-paginate .top-paginate--controls {
+    clear: both;
+    padding-bottom: .5rem;
+    padding-top: .25rem; }
+  .top-paginate .paginater {
+    display: inline-block;
+    float: right;
+    padding-top: 0.5rem; }
+  .top-paginate form {
+    display: inline-block; }
 
 .bottom-paginate {
   margin-left: 3rem;
@@ -576,3 +579,20 @@ img.sots-logo {
   width: auto;
   float: left;
   margin: 1rem 1rem 1rem 0; }
+
+.btn-sots {
+  background-color: #979797; }
+
+.btn-sots:hover {
+  background-color: #4A4A4A;
+  border-color: #4A4A4A; }
+
+.btn-sots .fa-download {
+  padding-right: .5rem; }
+
+.btn-sots--download, .btn-sots--download:hover {
+  color: #fff; }
+
+.btn-sots--download-offcanvas {
+  border-radius: 0;
+  width: 95%; }

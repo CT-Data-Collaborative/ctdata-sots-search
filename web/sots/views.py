@@ -242,15 +242,17 @@ def download():
         q_object['business_type'] = form.business_type.data
         results = query(q_object)
         file = StringIO()
-        writer = csv.DictWriter(file, fieldnames=['name', 'id', 'origin date', 'status', 'type', 'address'])
+        # writer = csv.DictWriter(file, fieldnames=['name', 'id', 'origin date', 'status', 'type', 'address'])
+        writer = csv.DictWriter(file, fieldnames=['name', 'id', 'origin date', 'status', 'type', 'street', 'city', 'state', 'zip'])
         writer.writeheader()
         for biz in results.all():
             row = {'name': biz.nm_name, 'id': biz.id_bus, 'origin date': biz.dt_origin, 'status': biz.status,
-                   'type': biz.type, 'address': biz.address}
+                   'type': biz.type, 'street': biz.street, 'city': biz.city, 'state': biz.city, 'zip': biz.zip}
+                   # 'type': biz.type, 'address': biz.address}
             writer.writerow(row)
         file.seek(0)
         response = Response(file, content_type='text/csv')
-        response.headers['Content-Disposition'] = 'attachment; filename=data.csv'
+        response.headers['Content-Disposition'] = 'attachment; filename=sots_search_results.csv'
         return response
 
 

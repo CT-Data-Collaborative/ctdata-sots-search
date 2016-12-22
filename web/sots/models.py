@@ -21,8 +21,11 @@ class FullTextCompositeIndex(db.Model):
     address1 = db.Column(TSVECTOR)
     address2 = db.Column(TSVECTOR)
     name = db.Column(TSVECTOR)
+    street = db.Column(db.String)
     city = db.Column(db.String)
     state = db.Column(db.String)
+    zip = db.Column(db.String)
+
 
     @hybrid_property
     def city_state(self):
@@ -45,8 +48,10 @@ class FullTextIndex(db.Model):
     status = db.Column(db.String)
     address = db.Column(db.String)
     document = db.Column(TSVECTOR)
+    street = db.Column(db.String)
     city = db.Column(db.String)
     state = db.Column(db.String)
+    zip = db.Column(db.String)
 
     @hybrid_property
     def city_state(self):

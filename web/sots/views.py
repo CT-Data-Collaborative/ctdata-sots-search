@@ -234,21 +234,20 @@ def download():
             'sort_order': form.sort_order.data
         }
         try:
-            q_object['start_date'] = datetime.strptime(form.start_date.data, '%Y-%m-%d')
-            q_object['end_date'] = datetime.strptime(form.end_date.data, '%Y-%m-%d')
+            q_object['start_date'] = datetime.strftime(form.start_date.data, '%Y-%m-%d')
+            q_object['end_date'] = datetime.strftime(form.end_date.data, '%Y-%m-%d')
         except TypeError:
             q_object['start_date'] = date(year=1990, month=1, day=1)
             q_object['end_date'] = datetime.now()
         q_object['business_type'] = form.business_type.data
         results = query(q_object)
         file = StringIO()
-        # writer = csv.DictWriter(file, fieldnames=['name', 'id', 'origin date', 'status', 'type', 'address'])
+
         writer = csv.DictWriter(file, fieldnames=['name', 'id', 'origin date', 'status', 'type', 'street', 'city', 'state', 'zip'])
         writer.writeheader()
         for biz in results.all():
             row = {'name': biz.nm_name, 'id': biz.id_bus, 'origin date': biz.dt_origin, 'status': biz.status,
                    'type': biz.type, 'street': biz.street, 'city': biz.city, 'state': biz.city, 'zip': biz.zip}
-                   # 'type': biz.type, 'address': biz.address}
             writer.writerow(row)
         file.seek(0)
         response = Response(file, content_type='text/csv')

@@ -4,38 +4,13 @@ var gulp = require('gulp'),
     exec = require('gulp-exec'),
     sass = require('gulp-sass');
 
-gulp.task('build', ['sass'], shell.task([
-    'docker-compose build'
-]));
-
-gulp.task('build-dev', ['sass'], shell.task([
-    'docker-compose -f dev.yml build'
-]));
-
-gulp.task('up', ['build'], shell.task([
-    'docker-compose up -d'
-]));
-
-gulp.task('up-dev', ['build'], shell.task([
-    'docker-compose -f dev.yml up -d'
-]));
-
-
-gulp.task('test', ['build'], shell.task([
-   'docker-compose run web py.test -v sots/sots_tests.py'
-]));
-
-gulp.task('coverage', ['build'], shell.task([
-    'docker-compose run web py.test --cov-report term-missing --cov=sots sots/sots_tests.py'
-]));
-
 
 gulp.task('js_dependencies', function() {
     gulp.src([
         'node_modules/jquery/dist/jquery.min.js',
         'node_modules/bootstrap/dist/js/bootstrap.min.js',
         'node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'
-    ]).pipe(gulp.dest('web/sots/static/js/libs'));
+    ]).pipe(gulp.dest('sots/static/js/libs'));
 });
 
 gulp.task('css_dependencies', function() {
@@ -43,25 +18,24 @@ gulp.task('css_dependencies', function() {
        'node_modules/bootstrap/dist/css/bootstrap.min.css',
        'node_modules/font-awesome/css/font-awesome.min.css',
        'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css'
-   ]).pipe(gulp.dest('web/sots/static/css'));
+   ]).pipe(gulp.dest('sots/static/css'));
 });
 
 gulp.task('fonts', function() {
     gulp.src([
         'node_modules/font-awesome/fonts/*.*'
-    ]).pipe(gulp.dest('web/sots/static/fonts'));
+    ]).pipe(gulp.dest('sots/static/fonts'));
 });
-
 
 gulp.task('sass', function() {
     gulp.src('src/sass/sots.scss')
      .pipe(sass().on('error', sass.logError))
-     .pipe(gulp.dest('web/sots/static/css'));
+     .pipe(gulp.dest('sots/static/css'));
 });
 
 gulp.task('images', function() {
     gulp.src('src/images/*.*')
-        .pipe(gulp.dest('web/sots/static/images'));
+        .pipe(gulp.dest('sots/static/images'));
 });
 
 gulp.task('depends', ['js_dependencies', 'css_dependencies', 'fonts', 'images'], function() {
@@ -69,8 +43,4 @@ gulp.task('depends', ['js_dependencies', 'css_dependencies', 'fonts', 'images'],
 
 gulp.task('default', function() {
     gulp.run('build');
-});
-
-gulp.task('dev', function() {
-    gulp.run('up-dev');
 });

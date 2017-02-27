@@ -251,7 +251,7 @@ def download():
         writer.writeheader()
         for biz in results.all():
             row = {'name': biz.nm_name, 'id': biz.id_bus, 'origin date': biz.dt_origin, 'status': biz.status,
-                   'type': biz.type, 'street': biz.street, 'city': biz.city, 'state': biz.city, 'zip': biz.zip}
+                   'type': biz.type, 'street': biz.street, 'city': biz.city, 'state': biz.state, 'zip': biz.zip}
             writer.writerow(row)
         file.seek(0)
         response = Response(file, content_type='text/csv')

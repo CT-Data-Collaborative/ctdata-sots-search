@@ -1,15 +1,20 @@
 version: '2'
 
 services:
+  db:
+    image: mdillon/postgis:9.5
+    restart: always
+    env_file: dev.env
+    ports:
+    - "5432:5432"
+
   web:
     restart: always
     build: ./web
     expose:
       - "8000"
-    external_links:
-      - sotsdbcontainer_db_1:db
-    networks:
-      - default
+    links:
+      - db:db
     volumes:
       - /usr/src/app/static
     env_file: dev.env
@@ -18,8 +23,6 @@ services:
   nginx:
   #  restart: always
     build: ./nginx/
-    networks:
-      - default
     ports:
       - "80:5000"
     volumes:
@@ -28,8 +31,3 @@ services:
       - web
     links:
       - web:web
-
-networks:
-  default:
-    external:
-      name: sotsdbcontainer_default

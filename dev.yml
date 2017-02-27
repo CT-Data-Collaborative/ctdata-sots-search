@@ -12,7 +12,7 @@ services:
       - default
     volumes:
       - /usr/src/app/static
-    env_file: .env
+    env_file: dev.env
     command: /usr/local/bin/gunicorn -w 2 -b :8000 runserver:app
 
   nginx:

@@ -1,3 +1,9 @@
+import sys
+import csv
+import requests
+import json
+from datetime import datetime, date
+from io import StringIO
 from sots import app, db
 from flask import render_template, request, redirect, url_for, Response
 from sqlalchemy import func, desc, or_
@@ -7,11 +13,8 @@ from sots.forms import SearchForm, AdvancedSearchForm, FeedbackForm
 from sots.config import BaseConfig as ConfigObject
 from sots.helpers import corp_type_lookup, origin_lookup, category_lookup
 from sots.helpers import check_empty as check_none
-from datetime import datetime, date
-from io import StringIO
-import csv
-import requests
-import json
+
+
 
 def corp_domesticity(bus_id):
     r = Corp.query.filter(Corp.id_bus == str(bus_id)).first()
@@ -117,6 +120,7 @@ def query(q_object):
     else:
         results = results.order_by(q_object['sort_by'])
     return results
+
     # if len(q_object['query_limit']) > 0:
     #     tql = func.plainto_tsquery('english', q_object['query_limit'])
     #     if q_object['index_field'] == 'business_name':

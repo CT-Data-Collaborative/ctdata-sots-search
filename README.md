@@ -29,3 +29,16 @@ followed by
 Finally, deactivate the docker-machine:
 
 `eval $(docker-machine env -u)`
+
+# Config Settings
+
+Search forms require setting the start and end date as env variables in the .env files.
+
+Dates should be specified in the form of:
+
+```
+START_DATE=1900-01-01
+END_DATE=2017-09-01
+```
+
+The `END_DATE` should always reference the first day of the month that immediately follows the most recent month of data that was processed. For example, when processing the data dump uploaded on September 2nd, 2017, the end date should be 2017-09-01.

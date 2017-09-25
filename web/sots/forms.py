@@ -1,6 +1,6 @@
 from flask_wtf import Form
 from wtforms import StringField, SelectField, SelectMultipleField, BooleanField, validators, DateField, HiddenField
-# from wtforms.fields.html5 import DateField
+from sots.config import BaseConfig as ConfigObject
 from datetime import datetime
 from wtforms.widgets import TextArea
 
@@ -19,8 +19,10 @@ class SearchForm(Form):
 
 # TODO Break out index into components -- individual fields w/ and/or
 class AdvancedSearchForm(Form):
-    start_date_default = datetime.strptime('1900-01-01', '%Y-%m-%d')
-    end_date_default = datetime.strptime('2016-08-01', '%Y-%m-%d')
+    # start_date_default = datetime.strptime('1900-01-01', '%Y-%m-%d')
+    # end_date_default = datetime.strptime('2016-08-01', '%Y-%m-%d')
+    start_date_default = datetime.strptime(ConfigObject.START_DATE, '%Y-%m-%d')
+    end_date_default = datetime.strptime(ConfigObject.END_DATE, '%Y-%m-%d')
     sort_by = HiddenField(default='nm_name')
     sort_order = HiddenField(default='asc')
     query = StringField('Search Term', [validators.Length(max=255)])

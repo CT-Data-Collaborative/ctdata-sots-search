@@ -16,11 +16,15 @@ Next bring the database up:
 
 `docker-compose up -d db`
 
-Then use the [ctdata-sots-cli](https://github.com/CT-Data-Collaborative/ctdata-sots-cli) to build the database tables and populate with the clean dataset
+Then use the [ctdata-sots-cli](https://github.com/CT-Data-Collaborative/ctdata-sots-cli) to build the database tables and populate with the updated data.
 
-Build and relaunch the application.
+Once the data load is complete, build and relaunch the entire application stack:
 
-`docker-compose build` followed by `docker-compose up -d`
+`docker-compose build`
+
+followed by
+
+`docker-compose up -d`
 
 Finally, deactivate the docker-machine:
 

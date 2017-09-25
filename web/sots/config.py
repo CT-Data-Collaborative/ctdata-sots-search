@@ -20,6 +20,8 @@ class BaseConfig(object):
     GITHUB_TOKEN = os.environ['GITHUB_ISSUE_TOKEN']
     GITHUB_REPO = os.environ['GITHUB_REPO']
     GITHUB_OWNER = os.environ['GITHUB_OWNER']
+    START_DATE = os.environ['START_DATE']
+    END_DATE = os.environ['END_DATE']
     # pagination
     RESULTS_PER_PAGE = 25
     DEBUG_TB_PROFILER_ENABLED = os.environ['DEBUG']

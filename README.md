@@ -6,15 +6,11 @@ The flask application is deployed using docker and is served using nginx.
 
 ## Local deployment
 
-1. Bring up a database for loading data into
-
-`docker-compose -f dev.yml up -d db`
+1. Bring up a database for loading data: `docker-compose -f dev.yml up -d db`
 
 2. Use the [ctdata-sots-cli](https://github.com/CT-Data-Collaborative/ctdata-sots-cli) to build the database tables and populate with the updated data.
 
-3. Bring up the entire application stack
-
-`docker-compose -f dev.yml up -d`
+3. Bring up the entire application stack: `docker-compose -f dev.yml up -d`
 
 ## Production deployment
 

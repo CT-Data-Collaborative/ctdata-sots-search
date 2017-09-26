@@ -10,7 +10,7 @@ The flask application is deployed using docker and is served using nginx.
 
 `docker-compose -f dev.yml up -d db`
 
-2. Uue the [ctdata-sots-cli](https://github.com/CT-Data-Collaborative/ctdata-sots-cli) to build the database tables and populate with the updated data.
+2. Use the [ctdata-sots-cli](https://github.com/CT-Data-Collaborative/ctdata-sots-cli) to build the database tables and populate with the updated data.
 
 3. Bring up the entire application stack
 

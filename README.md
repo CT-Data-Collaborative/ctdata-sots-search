@@ -19,6 +19,7 @@ For instructions on the business formations procedure, see the [ctdata-sots-form
 To do this, first clone two repos from the CTData GitHub. 
 
 a) the ctdata-sots-search repo (this is the application directory)
+
 b) the sots-db-schema repo (the sots-db-schema dir holds the .yml files for each table schema)
 
 Perform the following two commands:

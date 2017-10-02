@@ -1,6 +1,6 @@
-### Secretary of the State Business Registration Data Update Instructions
+## Secretary of the State Business Registration Data Update Instructions
 
-#### These instructions include the following processes:
+### These instructions include the following processes:
 
 1. Data Download from FTP Server
 2. Data Processing for both:
@@ -11,10 +11,7 @@
 For instructions on the business formations procedure, see the [ctdata-sots-formations-data-processing README](https://github.com/CT-Data-Collaborative/ctdata-sots-formations-data-processing)
 
 ***
-
-#### SOTS Search Portal
-
-**Local directory setup**
+### Local directory setup
 ***
 
 1. Create your working directory on your local machine i.e. a 'SOTS' folder. In the terminal window cd to your 'SOTS' folder to setup the folder structure. 
@@ -39,7 +36,8 @@ This creates the folder structure that will hold the raw, intermediate, and fina
 
 ![Folder-structure](https://user-images.githubusercontent.com/8619681/30936212-1d487560-a3a1-11e7-8b72-2aea72009ae1.png)
 
-**Data Download from FTP Server**
+***
+## Data Download from FTP Server
 ***
 
 Now that you have your local environment setup, now we can go over to the FTP Server and transfer the data files from there to your local machine. 
@@ -63,7 +61,8 @@ Once file download is complete, you should have all the zip folders saved to you
 
 You are now ready to move on to the SOTS Data Processing Steps. 
 
-**Data Processing**
+***
+## Data Processing
 ***
 
 > These steps come after running the steps outlined in the SOTS Data Download from FTP Server instructions.
@@ -76,7 +75,8 @@ Building a local or production instance of this application requires a similar s
 
 The flask application is deployed using docker and is served using nginx.
 
-## Local deployment
+
+**Local deployment**
 ***
 
 ### A note about database and application ports for local deployment:
@@ -202,7 +202,7 @@ Set up the server connection, enter password from dev.env file that you have bee
 
 ![Local-app](https://user-images.githubusercontent.com/8619681/31088240-fa2d78a2-a76d-11e7-8a8e-20dae0c45e81.png)
 
-## Production deployment
+**Production deployment**
 ***
 
 This application is deployed to an EC2 instance that is created via docker-machine.
@@ -266,6 +266,7 @@ In same window run `docker ps`, should be hosted on 0.0.0.0 internally
 ```docker-compose up -d```
 
 
+***
 ## Public Server Configuration
 ***
 

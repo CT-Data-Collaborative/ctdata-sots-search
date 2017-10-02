@@ -11,7 +11,7 @@
 For instructions on the business formations procedure, see the [ctdata-sots-formations-data-processing README](https://github.com/CT-Data-Collaborative/ctdata-sots-formations-data-processing)
 
 ***
-### Local directory setup
+## Local directory setup
 ***
 
 1. Create your working directory on your local machine i.e. a 'SOTS' folder. In the terminal window cd to your 'SOTS' folder to setup the folder structure. 
@@ -76,10 +76,10 @@ Building a local or production instance of this application requires a similar s
 The flask application is deployed using docker and is served using nginx.
 
 
-**Local deployment**
+#### Local deployment
 ***
 
-### A note about database and application ports for local deployment:
+##### A note about database and application ports for local deployment:
 
 > When developing locally, it is possible that services may already be running on the specified exposed ports. For example, if you have a local running instance of a postgres server, it will already be listening on 0.0.0.0:5432, which would lead to a port collision when launching the database locally.
 
@@ -202,7 +202,7 @@ Set up the server connection, enter password from dev.env file that you have bee
 
 ![Local-app](https://user-images.githubusercontent.com/8619681/31088240-fa2d78a2-a76d-11e7-8a8e-20dae0c45e81.png)
 
-**Production deployment**
+#### Production deployment
 ***
 
 This application is deployed to an EC2 instance that is created via docker-machine.

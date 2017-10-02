@@ -2,23 +2,20 @@
 
 #### These instructions include the following processes:
 
-##### SOTS Search Portal
 1. Data Download from FTP Server
 2. Data Processing for both:
-  - Local Deployment
-  - Production Deployment
+   - Local Deployment
+   - Production Deployment
 3. Public Server configuration
 
-##### SOTS Business Formations
 For instructions on the business formations procedure, see the [ctdata-sots-formations-data-processing README](https://github.com/CT-Data-Collaborative/ctdata-sots-formations-data-processing)
 
 ***
 
-##### SOTS Search Portal
-
-***
+#### SOTS Search Portal
 
 **Local directory setup**
+***
 
 1. Create your working directory on your local machine i.e. a 'SOTS' folder. In the terminal window cd to your 'SOTS' folder to setup the folder structure. 
 
@@ -42,9 +39,8 @@ This creates the folder structure that will hold the raw, intermediate, and fina
 
 ![Folder-structure](https://user-images.githubusercontent.com/8619681/30936212-1d487560-a3a1-11e7-8b72-2aea72009ae1.png)
 
-***
-
 **Data Download from FTP Server**
+***
 
 Now that you have your local environment setup, now we can go over to the FTP Server and transfer the data files from there to your local machine. 
 
@@ -67,9 +63,8 @@ Once file download is complete, you should have all the zip folders saved to you
 
 You are now ready to move on to the SOTS Data Processing Steps. 
 
-***
-
 **Data Processing**
+***
 
 > These steps come after running the steps outlined in the SOTS Data Download from FTP Server instructions.
 
@@ -82,31 +77,25 @@ Building a local or production instance of this application requires a similar s
 The flask application is deployed using docker and is served using nginx.
 
 ## Local deployment
-
 ***
 
 ### A note about database and application ports for local deployment:
 
 > When developing locally, it is possible that services may already be running on the specified exposed ports. For example, if you have a local running instance of a postgres server, it will already be listening on 0.0.0.0:5432, which would lead to a port collision when launching the database locally.
 
-> This can be solved by changing the exposed ports in the dev.yml to `XXXXX:5432`, with 'XXXXX' being the port of your choice. 
-Make sure to then update the dev.env settings with this port maps, so that the Flask application can discover and connect to the database correctly. And all the steps within the sots-cli would include this change as well, i.e. --dbport XXXXX
+> This can be solved by changing the exposed ports in the dev.yml to `XXXXX:5432`, with 'XXXXX' being the port of your choice. Make sure to then update the dev.env settings with this port maps, so that the Flask application can discover and connect to the database correctly. And all the steps within the sots-cli would include this change as well, i.e. --dbport XXXXX
 
 > The nginx server is set up to expose the application at port 80. This can be changed to any port, so long as it is forwarded to port 8000.
-
-***
 
 1. In the terminal window cd to the 'ctdata-sots-search' folder you cloned from GitHub.
 
 2. Copy the dev.env file to this directory (this file should be supplied to you by the administrator and should not be committed to GitHub)
 
 > Search forms require setting the start and end date as env variables in the .env files. In the .env files dates should be specified in the form of:
-
 ```
 START_DATE=1900-01-01
 END_DATE=2017-09-01
 ```
-
 2a. If needed, add both START_DATE and END_DATE variables, and change the `END_DATE` variable to the current month
 
 > The `END_DATE` should always reference the first day of the month that immediately follows the most recent month of data that was processed. For example, when processing the data dump uploaded on September 2nd, 2017, the end date should be 2017-09-01.
@@ -139,6 +128,7 @@ Keep this terminal window running. Any time you want to see when this service ge
 
 ```pip install --upgrade git+https://github.com/CT-Data-Collaborative/ctdata-sots-cli.git#egg=sotscli```
 
+
 8. Use the [ctdata-sots-cli](https://github.com/CT-Data-Collaborative/ctdata-sots-cli) to build the database tables and populate with the updated data.
 
 8a. Unzip monthlies folders from FTP server, run: (approx 2 min)
@@ -158,11 +148,17 @@ for example `wc -l clean/09_2017/BUS_MASTER.csv` should result in 861975 lines
 ```sots prepdb --dbhost 0.0.0.0 --dbport 5432 --dbuser sots --dbpass [password] --data clean/09_2017 ../sots-db-schema```
 
 > --dbhost 0.0.0.0 (hosts the application on your local machine at your localhost)
+
 > --dbport 5432 (port at which the postgres server listens on the docker container)
+
 > --dbuser sots (server configuration, set in the dev.env file)
+
 > --dbpass [password] (server password, set in the dev.env file)
+
 > --data [link to data] (points to where the .csvs live)
+
 > [link to schema directory] (.yml files for sots db schema) 
+
 
 8d. Drop supplemental tables
 
@@ -178,7 +174,7 @@ for example `wc -l clean/09_2017/BUS_MASTER.csv` should result in 861975 lines
 
 9. Open up PgAdminIII
 
-> If not downloaded, run the following commands:*
+> If not downloaded, run the following commands:
 
 Download postgresql data base package
 
@@ -207,7 +203,6 @@ Set up the server connection, enter password from dev.env file that you have bee
 ![Local-app](https://user-images.githubusercontent.com/8619681/31088240-fa2d78a2-a76d-11e7-8a8e-20dae0c45e81.png)
 
 ## Production deployment
-
 ***
 
 This application is deployed to an EC2 instance that is created via docker-machine.
@@ -270,9 +265,9 @@ In same window run `docker ps`, should be hosted on 0.0.0.0 internally
 
 ```docker-compose up -d```
 
-***
 
 ## Public Server Configuration
+***
 
 Now, as the final steps, you need to update the GoDaddy settings. 
 

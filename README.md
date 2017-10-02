@@ -24,8 +24,10 @@ b) the sots-db-schema repo (the sots-db-schema dir holds the .yml files for each
 
 Perform the following two commands:
 
-```git clone git@github.com:CT-Data-Collaborative/ctdata-sots-search.git```
-```git clone git@github.com:CT-Data-Collaborative/sots-db-schema.git```
+```
+git clone git@github.com:CT-Data-Collaborative/ctdata-sots-search.git
+git clone git@github.com:CT-Data-Collaborative/sots-db-schema.git
+```
 
 2. Take the file called 'create_folders.sh' from the 'ctdata-sots-search' folder and move it to your 'SOTS' folder. 
 
@@ -47,8 +49,10 @@ Now that you have your local environment setup, now we can go over to the FTP Se
 
 > If you do not have Filezilla downloaded, perform the following commands:
 
-```sudo apt-get update```
-```sudo apt-get install filezilla```
+```
+sudo apt-get update
+sudo apt-get install filezilla
+```
 
 2. Obtain the log-in credentials from the administrator, enter the credentials to open the Server
 
@@ -262,10 +266,10 @@ In same window run `docker ps`, should be hosted on 0.0.0.0 internally
 
 8. Relaunch the application (this deploys it to the public facing IP)
 
-```docker-compose build```
-
-```docker-compose up -d```
-
+```
+docker-compose build
+docker-compose up -d
+```
 
 ***
 ## Public Server Configuration

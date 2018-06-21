@@ -25,12 +25,21 @@ class FullTextCompositeIndex(db.Model):
     city = db.Column(db.String)
     state = db.Column(db.String)
     zip = db.Column(db.String)
+    principal_name = db.Column(db.String)
+    nm_agt = db.Column(db.String)
 
 
     @hybrid_property
     def city_state(self):
         if self.city and self.state:
             return "{}, {}".format(self.city, self.state)
+        else:
+            return ""
+
+    @hybrid_property
+    def city(self):
+        if self.city:
+            return "{}".format(self.city)
         else:
             return ""
 
@@ -52,11 +61,15 @@ class FullTextIndex(db.Model):
     city = db.Column(db.String)
     state = db.Column(db.String)
     zip = db.Column(db.String)
+    principal_name = db.Column(db.String)
+    nm_agt = db.Column(db.String)
 
     @hybrid_property
     def city_state(self):
         if self.city and self.state:
             return "{}, {}".format(self.city, self.state)
+        elif self.state is None:
+            return "{}".format(self.city)
         else:
             return ""
 
@@ -75,6 +88,7 @@ class FullTextIndex(db.Model):
 class BusMaster(db.Model):
     __tablename__ = 'bus_master'
     __table_args__ = {'autoload': True, 'autoload_with': db.engine}
+    nm_agt = db.Column(db.String)
 
     # status = db.relationship('Status', backref='business', lazy='joined')
 
@@ -110,6 +124,12 @@ class BusMaster(db.Model):
         return "{}{}{}{}{}{}{}".format(st1, st2, st3, city, state, zipcode, country)
 
     @hybrid_property
+    def agent_name(self):
+        nm_agent = check_empty(self.nm_agt)
+        return "{}".format(nm_agent)
+
+
+    @hybrid_property
     def agent_res_address(self):
         st1 = check_empty(self.ad_agt_res_str1)
         st2 = check_empty(self.ad_agt_res_str2)
@@ -141,6 +161,11 @@ class BusFiling(db.Model):
 class Principal(db.Model):
     __tablename__ = 'principal'
     __table_args__ = {'autoload': True, 'autoload_with': db.engine}
+
+    @hybrid_property
+    def principal_name(self):
+        principal = check_empty(self.nm_name)
+        return "{}".format(principal)
 
     @hybrid_property
     def business_address(self):

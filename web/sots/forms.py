@@ -4,6 +4,7 @@ from sots.config import BaseConfig as ConfigObject
 from datetime import datetime
 from wtforms.widgets import TextArea
 
+# Format: 'index_name', 'displayed search field'
 class SearchForm(Form):
     query = StringField('Search Term', [validators.Length(max=255)])
     sort_by = HiddenField(default='nm_name')
@@ -12,8 +13,11 @@ class SearchForm(Form):
                          choices=[
                              ('business_name', 'Business Name'),
                              ('place_of_business_address', 'Business Address'),
+                             ('place_of_business_city', 'Business City (Spell Correctly)'),
                              ('bus_id', 'Business ID'),
-                             ('filing_number', 'Filing Number')
+                             ('filing_number', 'Filing Number'), 
+                             ('principal_name', 'Principal Name'),
+                             ('agent_name', 'Agent Name'),
                          ])
 
 
@@ -31,8 +35,11 @@ class AdvancedSearchForm(Form):
                          choices=[
                              ('business_name', 'Business Name'),
                              ('place_of_business_address', 'Business Address'),
+                             ('place_of_business_city', 'Business City (Spell Correctly)'),
                              ('bus_id', 'Business ID'),
-                             ('filing_number', 'Filing Number')
+                             ('filing_number', 'Filing Number'), 
+                             ('principal_name', 'Principal Name'),
+                             ('agent_name', 'Agent Name'),
                          ])
     start_date = DateField('Start Date', format='%Y-%m-%d', default=start_date_default,
                            validators=[validators.optional()])

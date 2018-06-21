@@ -1,3 +1,4 @@
+
 <table>
     <thead>
         <!--<th>#</th>-->
@@ -31,6 +32,18 @@
             {% endwith %}
             City/State
         </th>
+        <th id="prin_name" class="sortable-header sortable-header--alpha" data-sort-by="principal_name" data-sort-order="asc">
+            {% with sort = 'principal_name' %}
+            {% include 'partials/sort_icons.html' %}
+            {% endwith %}
+            Principal Name(s)
+        </th>
+        <th id="agt_name" class="sortable-header sortable-header--alpha" data-sort-by="nm_agt" data-sort-order="asc">
+            {% with sort = 'nm_agt' %}
+            {% include 'partials/sort_icons.html' %}
+            {% endwith %}
+            Agent Name(s)
+        </th>
     </thead>
     <tbody>
         {% for result in results.items %}
@@ -41,7 +54,9 @@
             <td>{{ result.status }}</td>
             <td>{{ result.address }}</td>
             <td>{{ result.city_state}}</td>
+            <td>{{ result.principal_name}}</td>
+            <td>{{ result.nm_agt}}</td>
         </tr>
-        {% endfor %}
+       {% endfor %}
     </tbody>
 </table>

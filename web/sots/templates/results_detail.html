@@ -3,7 +3,9 @@
 {% block content %}
 <div class="search">
     <div class="breadcrumbs">
-        <a href="{{ url_for('index') }}"><i class="fa fa-home"></i></a> > <a class="results-back-link" href="{{ results_page }}">Results List</a> > Details
+        <i class="fa fa-home"></i> <a href="{{ url_for('index') }}">Home</a>
+          &gt; <a class="results-back-link" href="{{ results_page }}">Results List</a>
+          &gt; Details
     </div>
 </div>
 <div class="result-detail-table">
@@ -20,23 +22,12 @@
 
 {% block js %}
 {{ super() }}
-<script>
-    function toggleTableVisibility(selection) {
-        if ($(selection).hasClass('hidden')) {
-            $(selection).removeClass('hidden');
-        } else {
-            $(selection).addClass('hidden');
-        }
-    }
 
-    $('.button--toggle').click(function() {
-        var target = '#' + $(this).data('target');
-        toggleTableVisibility($(target));
-        if ($(this).hasClass('fa-plus-circle')) {
-            $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle')
-        } else {
-            $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle')
-        }
-    });
+<script>
+  $('.button--toggle').click(function() {
+    $( '#' + $(this).data('target') ).toggleClass('hidden');
+    $(this).toggleClass('fa-plus-circle fa-minus-circle');
+  });
 </script>
+
 {% endblock %}

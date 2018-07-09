@@ -158,6 +158,10 @@ class BusFiling(db.Model):
     __tablename__ = 'bus_filing'
     __table_args__ = {'autoload': True, 'autoload_with': db.engine}
 
+class FilmIndx(db.Model):
+    __tablename__ = 'filmindx'
+    __table_args__ = {'autoload': True, 'autoload_with': db.engine}
+
 class Principal(db.Model):
     __tablename__ = 'principal'
     __table_args__ = {'autoload': True, 'autoload_with': db.engine}

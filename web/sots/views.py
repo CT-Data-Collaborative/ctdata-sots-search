@@ -9,7 +9,7 @@ from flask import render_template, request, redirect, url_for, Response
 from sqlalchemy import func, desc, or_, distinct, and_
 #from sqlalchemy.orm import lazyload
 from sots.models import FullTextIndex, FullTextCompositeIndex, BusMaster, Principal, BusFiling, Status, Subtype, Corp, \
-    DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust, NameChange
+    DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust, NameChange, PrincipalName
 from sots.forms import SearchForm, AdvancedSearchForm, FeedbackForm
 from sots.config import BaseConfig as ConfigObject
 from sots.helpers import corp_type_lookup, origin_lookup, category_lookup
@@ -218,46 +218,47 @@ def search_results():
     results = query(q_object)
     results = results.paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
     form = AdvancedSearchForm(**q_object)
+    return render_template('results.html', results=results, q_obj=q_object, form=form)
 
     ##Count unique business name results
-    tq = func.plainto_tsquery('english', q_object['query'])  
-    nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq))).distinct().count()     
-    if q_object['query'] != '' and q_object['index_field'] != 'place_of_business_city':  
-        nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq))).distinct().count() 
-    if q_object['active'] and q_object['index_field'] != 'place_of_business_city':         
-        nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.status == 'Active')).distinct().count() 
-    if q_object['business_type'] and q_object['index_field'] != 'place_of_business_city':    
-        if q_object['business_type'] == ['All Entities']:
-            nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq))).distinct().count() 
-        else:
-            nm_query = db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.type.in_(q_object['business_type']))).distinct().count()  
-    if q_object['business_type'] and q_object['active'] and q_object['index_field'] != 'place_of_business_city':    
-        if q_object['business_type']:
-            if q_object['business_type'] == ['All Entities']:
-                nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.status == 'Active')).distinct().count() 
-            else:
-                nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.status == 'Active', FullTextIndex.type.in_(q_object['business_type']))).distinct().count()     
-    if q_object['start_date'] and q_object['end_date'] and q_object['index_field'] != 'place_of_business_city':    
-        nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count()         
-    if q_object['start_date'] and q_object['end_date'] and q_object['active'] and q_object['index_field'] != 'place_of_business_city':    
-        nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'], FullTextIndex.status == 'Active')).distinct().count() 
-    if q_object['start_date'] and q_object['end_date'] and q_object['business_type'] and q_object['index_field'] != 'place_of_business_city':    
-        if q_object['business_type'] == ['All Entities']:
-            nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count() 
-        else:
-            nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'], FullTextIndex.type.in_(q_object['business_type']))).distinct().count() 
-    if q_object['start_date'] and q_object['end_date'] and q_object['business_type'] and q_object['active'] and q_object['index_field'] != 'place_of_business_city':    
-        if q_object['business_type'] == ['All Entities']:
-            nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.status == 'Active', FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count() 
-        else:
-            nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.status == 'Active', FullTextIndex.type.in_(q_object['business_type']), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count() 
-    #Search for business city
-    if q_object['query'] != '' and q_object['index_field'] == 'place_of_business_city' and q_object['business_type'] and q_object['active'] and q_object['start_date'] and q_object['end_date']:  
-        if q_object['business_type'] == ['All Entities']:        
-            nm_query = db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name ==  'place_of_business_city', FullTextIndex.city.startswith(q_object['query'].upper()), FullTextIndex.status == 'Active', FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count() 
-        else:
-            nm_query = db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name ==  'place_of_business_city', FullTextIndex.city.startswith(q_object['query'].upper()), FullTextIndex.status == 'Active', FullTextIndex.type.in_(q_object['business_type']), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count() 
-    return render_template('results.html', results=results, q_obj=q_object, form=form, nm_query = nm_query)
+  #  tq = func.plainto_tsquery('english', q_object['query'])  
+  #  nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq))).distinct().count()     
+  #  if q_object['query'] != '' and q_object['index_field'] != 'place_of_business_city':  
+  #      nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq))).distinct().count() 
+  #  if q_object['active'] and q_object['index_field'] != 'place_of_business_city':         
+  #      nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.status == 'Active')).distinct().count() 
+  #  if q_object['business_type'] and q_object['index_field'] != 'place_of_business_city':    
+  #      if q_object['business_type'] == ['All Entities']:
+  #          nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq))).distinct().count() 
+  #      else:
+  #          nm_query = db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.type.in_(q_object['business_type']))).distinct().count()  
+  #  if q_object['business_type'] and q_object['active'] and q_object['index_field'] != 'place_of_business_city':    
+  #      if q_object['business_type']:
+  #          if q_object['business_type'] == ['All Entities']:
+  #              nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.status == 'Active')).distinct().count() 
+  #          else:
+  #              nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.status == 'Active', FullTextIndex.type.in_(q_object['business_type']))).distinct().count()     
+  #  if q_object['start_date'] and q_object['end_date'] and q_object['index_field'] != 'place_of_business_city':    
+  #      nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count()         
+  #  if q_object['start_date'] and q_object['end_date'] and q_object['active'] and q_object['index_field'] != 'place_of_business_city':    
+  #      nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'], FullTextIndex.status == 'Active')).distinct().count() 
+  #  if q_object['start_date'] and q_object['end_date'] and q_object['business_type'] and q_object['index_field'] != 'place_of_business_city':    
+  #      if q_object['business_type'] == ['All Entities']:
+  #          nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count() 
+  #      else:
+  #          nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'], FullTextIndex.type.in_(q_object['business_type']))).distinct().count() 
+  #  if q_object['start_date'] and q_object['end_date'] and q_object['business_type'] and q_object['active'] and q_object['index_field'] != 'place_of_business_city':    
+  #      if q_object['business_type'] == ['All Entities']:
+  #          nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.status == 'Active', FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count() 
+  #      else:
+  #          nm_query =db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name == q_object['index_field'], FullTextIndex.document.op('@@')(tq), FullTextIndex.status == 'Active', FullTextIndex.type.in_(q_object['business_type']), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count() 
+  #  #Search for business city
+  #  if q_object['query'] != '' and q_object['index_field'] == 'place_of_business_city' and q_object['business_type'] and q_object['active'] and q_object['start_date'] and q_object['end_date']:  
+  #      if q_object['business_type'] == ['All Entities']:        
+  #          nm_query = db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name ==  'place_of_business_city', FullTextIndex.city.startswith(q_object['query'].upper()), FullTextIndex.status == 'Active', FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count() 
+  #      else:
+  #          nm_query = db.session.query(FullTextIndex.nm_name).filter(and_(FullTextIndex.index_name ==  'place_of_business_city', FullTextIndex.city.startswith(q_object['query'].upper()), FullTextIndex.status == 'Active', FullTextIndex.type.in_(q_object['business_type']), FullTextIndex.dt_origin >= q_object['start_date'], FullTextIndex.dt_origin <= q_object['end_date'])).distinct().count() 
+  #  return render_template('results.html', results=results, q_obj=q_object, form=form, nm_query = nm_query)
 
 @app.route('/business/<id>', methods=['GET'])
 def detail(id):
@@ -317,7 +318,7 @@ def download():
         writer = csv.DictWriter(file, fieldnames=['name', 'id', 'principal', 'agent', 'origin date', 'status', 'type', 'street', 'city', 'state', 'zip'])
         writer.writeheader()
         for biz in results.all():
-            row = {'name': biz.nm_name, 'id': biz.id_bus, 'principal': biz.principal_name, 'agent': biz.agent_names, 'origin date': biz.dt_origin, 'status': biz.status,
+            row = {'name': biz.nm_name, 'id': biz.id_bus, 'principal': biz.principal_name, 'agent': biz.nm_agt, 'origin date': biz.dt_origin, 'status': biz.status,
                    'type': biz.type, 'street': biz.street, 'city': biz.city, 'state': biz.state, 'zip': biz.zip}
             writer.writerow(row)
         file.seek(0)

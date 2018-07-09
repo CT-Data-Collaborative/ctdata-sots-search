@@ -157,6 +157,11 @@ class BusMaster(db.Model):
 class BusFiling(db.Model):
     __tablename__ = 'bus_filing'
     __table_args__ = {'autoload': True, 'autoload_with': db.engine}
+    
+    ##adding principalname table
+class PrincipalName(db.Model):
+    __tablename__ = 'principalname'
+    __table_args__ = {'autoload': True, 'autoload_with': db.engine}
 
 class Principal(db.Model):
     __tablename__ = 'principal'

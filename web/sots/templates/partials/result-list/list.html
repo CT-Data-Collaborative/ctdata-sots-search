@@ -8,12 +8,12 @@
             {% endwith %}
             Business Name
         </th>
-        <th id="registration" class="sortable-header sortable-header--numeric" data-sort-by="dt_origin" data-sort-order="asc">
-            {% with sort = 'dt_origin' %}
+        <th id="registration" class="sortable-header sortable-header--numeric" data-sort-by="dt_filing" data-sort-order="asc">
+            {% with sort = 'dt_filing' %}
             {% include 'partials/sort_icons.html' %}
             {% endwith %}
-            Date Registered
-        </th>
+            Date Formed
+        </th>        
         <th id="status" class="sortable-header sortable-header--alpha" data-sort-by="status" data-sort-order="asc">
             {% with sort = 'status' %}
             {% include 'partials/sort_icons.html' %}
@@ -50,7 +50,7 @@
         <tr class="{{ loop.cycle('odd', 'even') }}">
             <!--<td>{{ loop.index }}</td>-->
             <td><a href="{{ url_for('detail', id=result.id_bus) }}">{{ result.nm_name }}</a></td>
-            <td class="reg-date">{{ result.dt_origin }}</td>
+            <td class="reg-date">{{ result.dt_filing }}</td>
             <td>{{ result.status }}</td>
             <td>{{ result.address }}</td>
             <td>{{ result.city_state}}</td>

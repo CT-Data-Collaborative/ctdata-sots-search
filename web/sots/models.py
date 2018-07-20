@@ -27,6 +27,7 @@ class FullTextCompositeIndex(db.Model):
     zip = db.Column(db.String)
     principal_name = db.Column(db.String)
     nm_agt = db.Column(db.String)
+    dt_filing =  db.Column(db.DateTime)    
 
 
     @hybrid_property
@@ -63,6 +64,8 @@ class FullTextIndex(db.Model):
     zip = db.Column(db.String)
     principal_name = db.Column(db.String)
     nm_agt = db.Column(db.String)
+    dt_filing =  db.Column(db.DateTime)
+    
 
     @hybrid_property
     def city_state(self):

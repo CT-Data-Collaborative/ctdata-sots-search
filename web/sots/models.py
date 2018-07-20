@@ -166,6 +166,10 @@ class PrincipalName(db.Model):
     __tablename__ = 'principalname'
     __table_args__ = {'autoload': True, 'autoload_with': db.engine}
 
+class FilmIndx(db.Model):
+    __tablename__ = 'filmindx'
+    __table_args__ = {'autoload': True, 'autoload_with': db.engine}
+
 class Principal(db.Model):
     __tablename__ = 'principal'
     __table_args__ = {'autoload': True, 'autoload_with': db.engine}

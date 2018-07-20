@@ -9,7 +9,7 @@ from flask import render_template, request, redirect, url_for, Response
 from sqlalchemy import func, desc, or_, distinct, and_
 #from sqlalchemy.orm import lazyload
 from sots.models import FullTextIndex, FullTextCompositeIndex, BusMaster, Principal, BusFiling, Status, Subtype, Corp, \
-    DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust, NameChange, PrincipalName
+    DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust, NameChange, FilmIndx, PrincipalName
 from sots.forms import SearchForm, AdvancedSearchForm, FeedbackForm
 from sots.config import BaseConfig as ConfigObject
 from sots.helpers import corp_type_lookup, origin_lookup, category_lookup
@@ -152,6 +152,7 @@ def search_results():
     form = AdvancedSearchForm(**q_object)
     return render_template('results.html', results=results, q_obj=q_object, form=form)
 
+
 @app.route('/business/<id>', methods=['GET'])
 def detail(id):
     result = BusMaster.query.filter(BusMaster.id_bus == str(id)).first()
@@ -161,6 +162,15 @@ def detail(id):
         return redirect(url_for('index'))
     principals = Principal.query.filter(Principal.id_bus == str(id)).all()
     filings = BusFiling.query.filter(BusFiling.id_bus == str(id)).order_by(desc(BusFiling.dt_filing)).all()
+
+    filmindx = {}
+    for filing in filings:
+        response = FilmIndx.query.filter(FilmIndx.id_bus_flng == filing.id_bus_flng).all()
+        if len(response) > 0:
+            filmindx[str(filing.id_bus_flng)] = response[0]
+        else:
+            filmindx[str(filing.id_bus_flng)] = {'volume_type': 'No data', 'volume_number': 'No data', 'start_page': 'No data', 'pages': 'No data'}
+
     name_changes = NameChange.query.filter(NameChange.id_bus == str(id)).order_by(desc(NameChange.dt_changed)).all()
     report = get_latest_report(id)
     return render_template('results_detail.html',
@@ -169,6 +179,7 @@ def detail(id):
                            principals=principals,
                            domesticity=domesticity,
                            filings=filings,
+                           filmindx=filmindx,
                            name_changes=name_changes,
                            results_page=redirect_url())
 

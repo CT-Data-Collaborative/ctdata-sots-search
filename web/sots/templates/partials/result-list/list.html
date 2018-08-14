@@ -12,7 +12,7 @@
             {% with sort = 'dt_filing' %}
             {% include 'partials/sort_icons.html' %}
             {% endwith %}
-            Date Formed
+            Date Formed (YYYY-MM-DD)
         </th>        
         <th id="status" class="sortable-header sortable-header--alpha" data-sort-by="status" data-sort-order="asc">
             {% with sort = 'status' %}
@@ -24,7 +24,7 @@
             {% with sort = 'city' %}
             {% include 'partials/sort_icons.html' %}
             {% endwith %}
-            Address
+            Address <icon class="fa fa-info-circle" title = "If inlcuded, business address is listed, if not, mailing address is listed."></icon>
         </th>
         <th id="city" class="sortable-header sortable-header--alpha" data-sort-by="city" data-sort-order="asc">
             {% with sort = 'city' %}

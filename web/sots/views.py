@@ -144,8 +144,9 @@ def search_results():
         q_object['start_date'] = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
         q_object['end_date'] = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')
     except TypeError:
-        q_object['start_date'] = date(year=1900, month=1, day=1)
-        q_object['end_date'] = datetime.now()
+        q_object['start_date'] = date(year=1803, month=1, day=1)
+      #  q_object['end_date'] = datetime.now()
+        q_object['end_date'] = date(year=2018, month=8, day=7)   
     q_object['business_type'] = request.args.getlist('business_type')
     results = query(q_object)
     results = results.paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
@@ -161,7 +162,7 @@ def detail(id):
     except AttributeError:
         return redirect(url_for('index'))
     principals = Principal.query.filter(Principal.id_bus == str(id)).all()
-    filings = BusFiling.query.filter(BusFiling.id_bus == str(id)).order_by(desc(BusFiling.dt_filing)).all()
+    filings = BusFiling.query.filter(BusFiling.id_bus == str(id)).order_by(BusFiling.dt_filing).all()
 
     filmindx = {}
     for filing in filings:

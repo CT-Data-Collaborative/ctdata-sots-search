@@ -12,7 +12,7 @@
             {% with sort = 'dt_filing' %}
             {% include 'partials/sort_icons.html' %}
             {% endwith %}
-            Date Formed (YYYY-MM-DD)
+            Date Formed <br/>(MM/DD/YYYY)
         </th>        
         <th id="status" class="sortable-header sortable-header--alpha" data-sort-by="status" data-sort-order="asc">
             {% with sort = 'status' %}
@@ -50,7 +50,7 @@
         <tr class="{{ loop.cycle('odd', 'even') }}">
             <!--<td>{{ loop.index }}</td>-->
             <td><a href="{{ url_for('detail', id=result.id_bus) }}">{{ result.nm_name }}</a></td>
-            <td class="reg-date">{{ result.dt_filing }}</td>
+            <td class="reg-date">{{ result.dt_filing2 }}</td>
             <td>{{ result.status }}</td>
             <td>{{ result.address }}</td>
             <td>{{ result.city_state}}</td>

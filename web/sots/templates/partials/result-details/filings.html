@@ -5,7 +5,7 @@
         <tr>
             <th>Filing ID</th>
             <th>Filing Type</th>
-            <th>Date of Filing (YYYY-MM-DD)</th>
+            <th>Date of Filing (MM/DD/YYYY)</th>
             <th>Volume Type</th>
             <th>Volume</th>
             <th>Start Page</th>
@@ -17,11 +17,11 @@
         <tr>
             <td>{{ filing.id_bus_flng }}</td>
             <td>{{ filing.tx_certif }}</td>
-            <td>{{ filing.dt_filing }}</td>
-            <td>{{ filmindx[filing.id_bus_flng].volume_type }}</td>
-            <td>{{ filmindx[filing.id_bus_flng].volume_number }}</td>
-            <td>{{ filmindx[filing.id_bus_flng].start_page }}</td>
-            <td>{{ filmindx[filing.id_bus_flng].pages }}</td>
+            <td>{{ filing.dt_filing2 }}</td>
+            <td>{{ filing.volume_type }}</td>
+            <td>{{ filing.volume_number }}</td>
+            <td>{{ filing.start_page }}</td>
+            <td>{{ filing.pages }}</td>            
         </tr>
         {% endfor %}
     </tbody>

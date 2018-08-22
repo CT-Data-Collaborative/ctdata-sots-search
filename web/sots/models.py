@@ -28,6 +28,7 @@ class FullTextCompositeIndex(db.Model):
     principal_name = db.Column(db.String)
     nm_agt = db.Column(db.String)
     dt_filing =  db.Column(db.DateTime)    
+    dt_filing2 =  db.Column(db.DateTime)      
 
 
     @hybrid_property
@@ -65,7 +66,7 @@ class FullTextIndex(db.Model):
     principal_name = db.Column(db.String)
     nm_agt = db.Column(db.String)
     dt_filing =  db.Column(db.DateTime)
-    
+    dt_filing2 =  db.Column(db.DateTime)
 
     @hybrid_property
     def city_state(self):
@@ -169,6 +170,10 @@ class PrincipalName(db.Model):
 class FilmIndx(db.Model):
     __tablename__ = 'filmindx'
     __table_args__ = {'autoload': True, 'autoload_with': db.engine}
+    
+class FilingDetails(db.Model):
+    __tablename__ = 'filingdetails'
+    __table_args__ = {'autoload': True, 'autoload_with': db.engine}    
 
 class Principal(db.Model):
     __tablename__ = 'principal'

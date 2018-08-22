@@ -9,7 +9,7 @@ from flask import render_template, request, redirect, url_for, Response
 from sqlalchemy import func, desc, or_, distinct, and_
 #from sqlalchemy.orm import lazyload
 from sots.models import FullTextIndex, FullTextCompositeIndex, BusMaster, Principal, BusFiling, Status, Subtype, Corp, \
-    DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust, NameChange, FilmIndx, PrincipalName
+    DomLmtCmpy, ForLmtCmpy, ForLmtLiabPart, ForLmtPart, BusOther, ForStatTrust, NameChange, FilmIndx, PrincipalName, FilingDetails
 from sots.forms import SearchForm, AdvancedSearchForm, FeedbackForm
 from sots.config import BaseConfig as ConfigObject
 from sots.helpers import corp_type_lookup, origin_lookup, category_lookup
@@ -142,7 +142,7 @@ def search_results():
         q_object['query_limit'] = ''
     try:
         q_object['start_date'] = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
-        q_object['end_date'] = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')
+        q_object['end_date'] = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')    
     except TypeError:
         q_object['start_date'] = date(year=1803, month=1, day=1)
       #  q_object['end_date'] = datetime.now()
@@ -162,15 +162,15 @@ def detail(id):
     except AttributeError:
         return redirect(url_for('index'))
     principals = Principal.query.filter(Principal.id_bus == str(id)).all()
-    filings = BusFiling.query.filter(BusFiling.id_bus == str(id)).order_by(BusFiling.dt_filing).all()
-
-    filmindx = {}
-    for filing in filings:
-        response = FilmIndx.query.filter(FilmIndx.id_bus_flng == filing.id_bus_flng).all()
-        if len(response) > 0:
-            filmindx[str(filing.id_bus_flng)] = response[0]
-        else:
-            filmindx[str(filing.id_bus_flng)] = {'volume_type': 'No data', 'volume_number': 'No data', 'start_page': 'No data', 'pages': 'No data'}
+   # filings = BusFiling.query.filter(BusFiling.id_bus == str(id)).order_by(BusFiling.dt_filing).all()
+    filings = FilingDetails.query.filter(FilingDetails.id_bus == str(id)).order_by(FilingDetails.dt_filing).all()
+# filmindx = {}
+# for filing in filings:
+#     response = FilmIndx.query.filter(FilmIndx.id_bus_flng == filing.id_bus_flng).all()
+#     if len(response) > 0:
+#         filmindx[str(filing.id_bus_flng)] = response[0]
+#     else:
+#         filmindx[str(filing.id_bus_flng)] = {'volume_type': 'No data', 'volume_number': 'No data', 'start_page': 'No data', 'pages': 'No data'}
 
     name_changes = NameChange.query.filter(NameChange.id_bus == str(id)).order_by(desc(NameChange.dt_changed)).all()
     report = get_latest_report(id)
@@ -180,7 +180,7 @@ def detail(id):
                            principals=principals,
                            domesticity=domesticity,
                            filings=filings,
-                           filmindx=filmindx,
+                        #   filmindx=filmindx,
                            name_changes=name_changes,
                            results_page=redirect_url())
 
@@ -214,15 +214,16 @@ def download():
             q_object['end_date'] = datetime.strftime(form.end_date.data, '%Y-%m-%d')
         except TypeError:
             q_object['start_date'] = date(year=1900, month=1, day=1)
-            q_object['end_date'] = datetime.now()
+            #q_object['end_date'] = datetime.now()
+            q_object['end_date'] = date(year=2018, month=8, day=7)
         q_object['business_type'] = form.business_type.data
         results = query(q_object)
         file = StringIO()
 
-        writer = csv.DictWriter(file, fieldnames=['name', 'id', 'principal', 'agent', 'origin date', 'status', 'type', 'street', 'city', 'state', 'zip'])
+        writer = csv.DictWriter(file, fieldnames=['name', 'id', 'principal', 'agent', 'date formed', 'status', 'type', 'street', 'city', 'state', 'zip'])
         writer.writeheader()
         for biz in results.all():
-            row = {'name': biz.nm_name, 'id': biz.id_bus, 'principal': biz.principal_name, 'agent': biz.nm_agt, 'origin date': biz.dt_origin, 'status': biz.status,
+            row = {'name': biz.nm_name, 'id': biz.id_bus, 'principal': biz.principal_name, 'agent': biz.nm_agt, 'date formed': biz.dt_filing2, 'status': biz.status,
                    'type': biz.type, 'street': biz.street, 'city': biz.city, 'state': biz.state, 'zip': biz.zip}
             writer.writerow(row)
         file.seek(0)

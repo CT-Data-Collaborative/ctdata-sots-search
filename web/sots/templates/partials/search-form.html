@@ -4,10 +4,10 @@
         <div class="form-group">
             <span>{{ form.index_field(class_='form-control') }}</span>
             <span>{{ form.query(size=30, class_='form-control', placeholder='Search for') }}</span>
+            <span><button type='submit' class="btn btn-sots" onclick="return function() {var b = this; b.disabled=true; setTimeout(function(){b.disabled=false;},2000);return true;}"><i class="fa fa-inverse fa-search"></i></button></span>
             {% for error in form.query.errors %}
-            <span class="help-inline">[{{ error }}]</span><br>
+            <span class="help-inline text-danger">{{ error }}</span><br>
             {% endfor %}
-            <span><button type='submit' class="btn btn-sots"><i class="fa fa-inverse fa-search"></i></button></span>
         </div>
         <!-- /.controls -->
         <!-- /.control-label -->

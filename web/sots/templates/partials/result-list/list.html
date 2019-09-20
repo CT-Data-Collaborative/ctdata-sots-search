@@ -1,3 +1,4 @@
+
 <table>
     <thead>
         <!--<th>#</th>-->
@@ -7,12 +8,12 @@
             {% endwith %}
             Business Name
         </th>
-        <th id="registration" class="sortable-header sortable-header--numeric" data-sort-by="dt_origin" data-sort-order="asc">
-            {% with sort = 'dt_origin' %}
+        <th id="registration" class="sortable-header sortable-header--numeric" data-sort-by="dt_filing" data-sort-order="asc">
+            {% with sort = 'dt_filing' %}
             {% include 'partials/sort_icons.html' %}
             {% endwith %}
-            Date Registered
-        </th>
+            Date Formed <br/>(MM/DD/YYYY)
+        </th>        
         <th id="status" class="sortable-header sortable-header--alpha" data-sort-by="status" data-sort-order="asc">
             {% with sort = 'status' %}
             {% include 'partials/sort_icons.html' %}
@@ -23,7 +24,7 @@
             {% with sort = 'city' %}
             {% include 'partials/sort_icons.html' %}
             {% endwith %}
-            Address
+            Address <icon class="fa fa-info-circle" title = "If inlcuded, business address is listed, if not, mailing address is listed."></icon>
         </th>
         <th id="city" class="sortable-header sortable-header--alpha" data-sort-by="city" data-sort-order="asc">
             {% with sort = 'city' %}
@@ -31,17 +32,31 @@
             {% endwith %}
             City/State
         </th>
+        <th id="prin_name" class="sortable-header sortable-header--alpha" data-sort-by="principal_name" data-sort-order="asc">
+            {% with sort = 'principal_name' %}
+            {% include 'partials/sort_icons.html' %}
+            {% endwith %}
+            Principal Name(s)
+        </th>
+        <th id="agt_name" class="sortable-header sortable-header--alpha" data-sort-by="nm_agt" data-sort-order="asc">
+            {% with sort = 'nm_agt' %}
+            {% include 'partials/sort_icons.html' %}
+            {% endwith %}
+            Agent Name(s)
+        </th>
     </thead>
     <tbody>
         {% for result in results.items %}
         <tr class="{{ loop.cycle('odd', 'even') }}">
             <!--<td>{{ loop.index }}</td>-->
             <td><a href="{{ url_for('detail', id=result.id_bus) }}">{{ result.nm_name }}</a></td>
-            <td class="reg-date">{{ result.dt_origin }}</td>
+            <td class="reg-date">{{ result.dt_filing2 }}</td>
             <td>{{ result.status }}</td>
             <td>{{ result.address }}</td>
             <td>{{ result.city_state}}</td>
+            <td>{{ result.principal_name}}</td>
+            <td>{{ result.nm_agt}}</td>
         </tr>
-        {% endfor %}
+       {% endfor %}
     </tbody>
 </table>

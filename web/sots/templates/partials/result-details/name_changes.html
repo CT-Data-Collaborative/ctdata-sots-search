@@ -1,5 +1,6 @@
-<p class='table-name'>Name Changes</p>
-<table class="name-changes">
+{% if name_changes %}
+<p class='table-name'>Name Changes <i class="fa fa-minus-circle button--toggle" data-target="name-changes"></i></p>
+<table id="name-changes">
     <thead>
         <tr>
             <th>Filing Number</th>
@@ -9,7 +10,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for name_change in name_change %}
+        {% for name_change in name_changes %}
         <tr>
             <td>{{ name_change.id_bus_flng }}</td>
             <td>{{ name_change.nm_old }}</td>
@@ -19,3 +20,7 @@
         {% endfor %}
     </tbody>
 </table>
+
+{% else %}
+<p class='table-name'>No Name Changes Found</p>
+{% endif %}

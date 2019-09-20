@@ -4,7 +4,7 @@
 {% set q_limit = q_obj.pop('query_limit') %}
 {% block content %}
     <div class="row row-offcanvas row-offcanvas-left">
-        <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 sidebar sidebar-offcanvas" id="sidebar">
+        <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 sidebar sidebar-offcanvas" id="sidebar">
             <h4 style="font-weight: bold">Refine or revise your search</h4>
             {% include 'partials/advanced-search-form.html' %}
             <div class="visible-sm visible-xs">
@@ -16,7 +16,7 @@
             <p>Do you have <a class='sots-link' href="{{ url_for('feedback') }}">feedback?</a></p>
         </div>
         <!-- /.col-sm-12 col-md-4 -->
-        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-9 maincontent">
+        <div class="col-xs-13 col-sm-12 col-md-8 col-lg-10 maincontent">
             <div class="overlay"></div>
             <!-- /.overla -->
             {% with start_date = start_date, end_date = end_date, current = 'Search Results' %}
@@ -74,7 +74,7 @@
                 $('form[name=advanced_search]').trigger('submit');
             });
             $('#start .input-group.date').datepicker({
-                startDate: '1990-01-01',
+                startDate: '1900-01-01',
                 startView: '0d',
                 endDate: '0d'
             });

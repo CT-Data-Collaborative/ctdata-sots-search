@@ -5,7 +5,11 @@
         <tr>
             <th>Filing ID</th>
             <th>Filing Type</th>
-            <th>Date of Filing</th>
+            <th>Date of Filing (MM/DD/YYYY)</th>
+            <th>Volume Type</th>
+            <th>Volume</th>
+            <th>Start Page</th>
+            <th>Pages #</th>
         </tr>
     </thead>
     <tbody>
@@ -13,12 +17,17 @@
         <tr>
             <td>{{ filing.id_bus_flng }}</td>
             <td>{{ filing.tx_certif }}</td>
-            <td>{{ filing.dt_filing }}</td>
+            <td>{{ filing.dt_filing2 }}</td>
+            <td>{{ filing.volume_type }}</td>
+            <td>{{ filing.volume_number }}</td>
+            <td>{{ filing.start_page }}</td>
+            <td>{{ filing.pages }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
 {% else %}
-<H2>NO FILINGS</H2>
+<p class='table-name'>No Filing Details Found</p>
 {% endif %}
 <!-- /.filings -->

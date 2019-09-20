@@ -1,8 +1,21 @@
 <div class="top-paginate">
     <div>
-        <span class="query-info">Search results for "{{ q_obj.query }}". {{ results.total }} total results found.</span>
-        <!--{% if results.total > 0 %}Click on Business Name for more information.{% endif %}</span>-->
+        <div class="query-info">Search results for "{{ q_obj.query }}". {{ results.total }} total results found. </div> 
     </div>
+ <script>
+    //(&paginate=false)
+function myFunction() {
+    var a = {}, l = 0;
+    $('table tr td:first-child').each(function(){
+        if (!a[$(this).text()]) {
+            l++;
+            a[$(this).text()] = true;
+        }
+    });
+    document.getElementById("demo").innerHTML = l;  
+}
+</script>    
+    <!--{% if results.total > 0 %}Click on Business Name for more information.{% endif %}</span>-->
     <div class="top-paginate--controls">
         {% include 'partials/download_form.html' %}
         <div class="paginater">

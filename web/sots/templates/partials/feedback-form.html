@@ -2,9 +2,18 @@
     <div class="control-group">
         <fieldset>
             <h3>Help us improve the SOTS Business Search Index</h3>
-            <p>Leave feedback here, or <a class="sots-link" href="mailto:info@ctdata.org">email us</a> directly.</p>
-            <p>If you need to include sensitive information, like your name, contact information or other details
-            you would rather keep private, please contact us directly via <a class="sots-link" href="mailto:info@ctdata.org">email</a>.</p>
+            <p>
+              Note: Changes to your filing details need to be made with the Secretary of the State's
+              Business Recording Division. This website only makes public data available.
+            </p>
+
+            <p class="text-danger">
+              Using this form, you leave feedback that will be publicly visible on GitHub.
+              If you need to include sensitive information, like your name, contact
+              information or other details you would rather keep private, please
+              contact us directly via</span> <a class="sots-link" href="mailto:info@ctdata.org">email</a>.
+            </p>
+
             <div class="form-group">
                 {{ form.goal.label}}
                 {{ form.goal(class='form-textarea')}}
@@ -13,20 +22,20 @@
                 {{ form.general.label}}
                 {{ form.general(class='form-textarea')}}
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display: none;">
                 {{ form.submitter.label}}
-                <p class="label-help">
+                <!--<p class="label-help">
                     I am a
                     <span class="u-black-space"></span>
                     interested in <span class="u-black-space"></span>
-                </p>
+                </p> -->
                 {{ form.submitter(class='form-textarea') }}
             </div>
             <!-- /.form-group -->
             <!-- /.form-group -->
             <!-- /.form-group -->
         </fieldset>
-        <p>This information will be reported on <a class='sots-link' href="https://github.com/">GitHub</a> where it will be publically visible. You can review all reported feedback
+        <p>This information will be reported on GitHub where it will be publicly visible. You can review all reported feedback
             on the project GitHub <a class='sots-link' href="https://github.com/{{ owner }}/{{ repo }}/issues">page</a>.</p>
         <p class="note">*Required</p>
         <!-- /.note -->

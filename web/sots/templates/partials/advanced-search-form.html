@@ -17,7 +17,7 @@
                 <h4>Limit by Start Date of Business</h4>
                 <!--<span class="input-label">Start:</span>-->
                 <!--<div class="input-group date" id="start" data-provide="datepicker" data-orientation="bottom" data-date-format="yyyy-mm-dd">-->
-                <div class="input-group date" id="start_date">    
+                <div class="input-group date" id="start_date">
                     <span class="input-group-addon">Start Date</span>
                     {{ form.start_date() }}
                 </div>
@@ -28,17 +28,23 @@
                     <span class="input-group-addon">End Date</span>
                     {{ form.end_date() }}
                 </div>
-                <p class="footnote">The business registration database contains businesses with start dates as early as 1803 and as late as August 7, 2018.</p>
                 <!-- /.footnote -->
             </div>
-            <div class="footnote">The business registration database contains businesses with start dates as early as 1803 and as late as August 7, 2018.</div>
+            <div class="footnote">The business registration database contains businesses with start dates as early as 1803 and as late as {{ form.end_date_nice }}.</div>
             <br><div class="search-tweaks">Active businesses only? {{ form.active }}</div>
             <div class="search-tweaks">Select one or more business types: {{ form.business_type }}</div>
-            <span><button type='submit' class="btn btn-sots"><i class="fa fa-inverse fa-search"></i></button></span>
+            <div>
+              <span><button type='submit' class="btn btn-sots"><i class="fa fa-inverse fa-search"></i></button></span>
+            </div>
+
+            <div style="float: left;">
+              {% for error in form.query.errors %}
+                <span class="help-inline">{{ error }}</span><br>
+              {% endfor %}
+            </div>
+
             {{ form.hidden_tag('csrf_token', 'sort_by', 'sort_order') }}
-            {% for error in form.query.errors %}
-            <span class="help-inline">[{{ error }}]</span><br>
-            {% endfor %}
+
         </div>
     </div>
 </form>

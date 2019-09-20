@@ -83,7 +83,13 @@ def domesticity_lookup(bus_id, subtype):
                          'F': for_lmt_part_domesticity,
                          'M': for_stat_trust_domesticity,
                          'K': gen_part_domesticity,
-                         'O': other_domesticity}
+                         'O': other_domesticity,
+                         #added by ILYA:
+                         'P': corp_domesticity,
+                         'Q': corp_domesticity,
+                         'R': corp_domesticity,
+                         'S': corp_domesticity,
+                         }
     lookup = type_table_lookup[subtype]
     return lookup(bus_id)
 
@@ -97,11 +103,12 @@ def get_latest_report(bus_id):
                     'CRLPF', 'CRS', 'CRN', 'COB', 'CON', 'COS']
     latest_report = BusFiling.query.filter(BusFiling.id_bus == bus_id).filter(
         BusFiling.cd_trans_type.in_(report_codes)).order_by(BusFiling.id_bus_flng.desc()).first()
+    #latest_report = BusFiling.query.filter(BusFiling.id_bus == bus_id).order_by(BusFiling.id_bus_flng.desc()).first()
     if latest_report:
         return latest_report.tx_certif
     else:
-        return "No Reports Found"
-    
+        return 'No Reports Found'
+
     #replace dt_origin with dt_filing
 def query(q_object):
     results = FullTextIndex.query.filter(FullTextIndex.index_name == q_object['index_field'])
@@ -111,7 +118,7 @@ def query(q_object):
     if q_object['query'] != '':
         tq = func.plainto_tsquery('english', q_object['query'])
         results = results.filter(FullTextIndex.document.op('@@')(tq))
-    if q_object['active']:
+    if q_object['active'] == 'True':
         results = results.filter(FullTextIndex.status == 'Active')
     if q_object['start_date'] and q_object['end_date']:
         results = results.filter(FullTextIndex.dt_filing >= q_object['start_date']).filter(FullTextIndex.dt_filing <= q_object['end_date'])
@@ -142,12 +149,25 @@ def search_results():
         q_object['query_limit'] = ''
     try:
         q_object['start_date'] = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
-        q_object['end_date'] = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')    
+        q_object['end_date'] = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')
+
     except TypeError:
-        q_object['start_date'] = date(year=1803, month=1, day=1)
-      #  q_object['end_date'] = datetime.now()
-        q_object['end_date'] = date(year=2018, month=8, day=7)   
+        sd =[ int(x) for x in ConfigObject.START_DATE.split('-') ]
+        q_object['start_date'] = date(sd[0], sd[1], sd[2])
+
+        ed = [ int(x) for x in ConfigObject.END_DATE.split('-') ]
+        q_object['end_date'] = date(ed[0], ed[1], ed[2])
+
+        #q_object['start_date'] = date(1803, 1, 1)
+        #q_object['end_date'] = datetime.now()
+        #q_object['end_date'] = date(2019, 1, 1)
+
     q_object['business_type'] = request.args.getlist('business_type')
+
+    if (len(q_object['query']) < 2 or len(q_object['query']) > 255):
+        q_object['query'] = 'sallys apizza'
+
+    q_object['query_limit'] = 10
     results = query(q_object)
     results = results.paginate(page, ConfigObject.RESULTS_PER_PAGE, False)
     form = AdvancedSearchForm(**q_object)
@@ -162,8 +182,20 @@ def detail(id):
     except AttributeError:
         return redirect(url_for('index'))
     principals = Principal.query.filter(Principal.id_bus == str(id)).all()
-   # filings = BusFiling.query.filter(BusFiling.id_bus == str(id)).order_by(BusFiling.dt_filing).all()
+    #filings = BusFiling.query.filter(BusFiling.id_bus == str(id)).order_by(BusFiling.dt_filing).all()
     filings = FilingDetails.query.filter(FilingDetails.id_bus == str(id)).order_by(FilingDetails.dt_filing).all()
+
+    # TEMPORARY SOLUTION TO THE FOLLOWING PROBLEM:
+    # For some NH business registrations between Oct - Dec 2018, filing data are missing. I realized
+    # that althouh the records are present in BUS_FILING table, they are missing from FILMINDX table.
+    filings_ids = [x.id_bus_flng for x in filings]
+    filings_2 = BusFiling.query.filter(BusFiling.id_bus == str(id)).order_by(BusFiling.dt_filing).all()
+
+    for f in filings_2:
+        if f.id_bus_flng not in filings_ids:
+            filings.append(f)
+
+    #filings = FilingDetails.query.filter(FilingDetails.id_bus == '1287471').order_by(FilingDetails.dt_filing).all()
 # filmindx = {}
 # for filing in filings:
 #     response = FilmIndx.query.filter(FilmIndx.id_bus_flng == filing.id_bus_flng).all()
@@ -212,10 +244,18 @@ def download():
         try:
             q_object['start_date'] = datetime.strftime(form.start_date.data, '%Y-%m-%d')
             q_object['end_date'] = datetime.strftime(form.end_date.data, '%Y-%m-%d')
+
         except TypeError:
-            q_object['start_date'] = date(year=1900, month=1, day=1)
+            sd =[ int(x) for x in ConfigObject.START_DATE.split('-') ]
+            q_object['start_date'] = date(sd[0], sd[1], sd[2])
+
+            ed = [ int(x) for x in ConfigObject.END_DATE.split('-') ]
+            q_object['end_date'] = date(ed[0], ed[1], ed[2])
+
+            #q_object['start_date'] = date(year=1900, month=1, day=1)
             #q_object['end_date'] = datetime.now()
-            q_object['end_date'] = date(year=2018, month=8, day=7)
+            #q_object['end_date'] = date(year=2019, month=1, day=1)
+
         q_object['business_type'] = form.business_type.data
         results = query(q_object)
         file = StringIO()
@@ -244,7 +284,8 @@ def advanced():
                                 business_type=form.business_type.data,
                                 start_date=form.start_date.data,
                                 end_date=form.end_date.data,
-                                active=form.active.data,
+                                active=form.active.data if form.active.data else '',    # if `False` is passed, the checkbox will still appear "checked"
+                                                                                        # in browser because `checked=""` will be assigned to the input tag
                                 sort_by=form.sort_by.data,
                                 sort_order=form.sort_order.data,
                                 page=1))
@@ -257,9 +298,9 @@ def technical_details():
 
 
 def to_markup(form):
-    text = "## Goal: \n{}\n".format(form.goal.data)
-    text += "## General Feedback: \n{}\n".format(form.general.data)
-    text += "## Details: \n - {}".format(form.user_agent.data)
+    text = "## Feedback: \n{}\n".format(form.goal.data)
+    text += "## Contact: \n{}\n".format(form.general.data)
+    text += "## User Agent: \n - {}".format(form.user_agent.data)
     return text
 
 def create_github_issue(form):
@@ -281,7 +322,7 @@ def feedback():
     owner = ConfigObject.GITHUB_OWNER
     agent = request.headers.get('User-Agent')
     form = FeedbackForm(user_agent=agent)
-    if form.validate_on_submit():
+    if form.validate_on_submit() and (form.general.data != form.goal.data):
         r = create_github_issue(form)
         if r.status_code == 201:
             return render_template('feedback_confirm.html', url=r.json()['html_url'])

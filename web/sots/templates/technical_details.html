@@ -1,24 +1,24 @@
 {% extends "_base.html" %}
 
 {% block content %}
-<div class="hero">
-</div>
+<!--<div class="hero">
+</div>-->
 {% include 'partials/intro.html' %}
 <div class="col-sm-10 col-md-8 col-md-offset-1 col-sm-offset-1">
     {% with current = 'Technical Details' %}
     {% include 'partials/breadcrumbs.html'%}
     {% endwith %}
-    <h2>Metadata</h2>    
-    <p>'Date Formed' is the date the entity first filed with the Office of the Secretary of the State and is used as the 'Start Date' within the database.</p> 
-    <p>Domestic (CT) entities use the terms "organization" or "formation" to signify when the business first forms. Foreign (outside CT) entities 
-        use the term "registration" to signify the day they registered with The Secretary of the State as doing business in the state of CT.</p> 
-    <h2>Frequently Asked Questions?</h2>
+    <h2>Metadata</h2>
+    <p>'Date Formed' is the date the entity first filed with the Office of the Secretary of the State and is used as the 'Start Date' within the database.</p>
+    <p>Domestic (CT) entities use the terms "organization" or "formation" to signify when the business first forms. Foreign (outside CT) entities
+        use the term "registration" to signify the day they registered with The Secretary of the State as doing business in the state of CT.</p>
+    <h2>Frequently Asked Questions</h2>
     <h3>When is the data updated?</h3>
     <p>Data are updated on the first Tuesday of each month.</p>
     <h3>How does this data compare to statistics reported elsewhere?</h3>
     <p>The primary purpose of this portal is to enable easy lookup of business records. The complexity of how business
         activity is tracked and recorded makes certain types of searches more difficult. For example, we provide the ability
-        to limit search results by date of formation.  The <a class="sots-link" href = "http://www.sots.ct.gov/sots/site/default.asp" target = "_blank">Connecticut Secretary of the State</a> remains
+        to limit search results by date of formation. The <a class="sots-link" href="https://portal.ct.gov/sots" target = "_blank">Connecticut Secretary of the State</a> remains
         the official source for data on business activity in Connecticut.</p>
     <h3>How far back does the data go?</h3>
     <p>The oldest company in the database is from 1803, therefore, the search goes as far back as that year.
@@ -36,10 +36,9 @@
         address will be listed, and if no address is present in the filings, than an address will not appear in the
         table.</p>
     <h3>Is there an API?</h3>
-    <p>Not yet. We are exploring technical issues related to building an API. If you are interested, please leave
-        feedback using our <a class="sots-link" href="{{url_for('feedback')}}">feedback</a> page.</p>
-    <h2>If you have additional questions, please contact us via our
-        <a class="sots-link" href="{{url_for('feedback')}}">feedback</a> page or by
-        <a class="sots-link" href="mailto:info@ctdata.org">emailing</a> us</h2>
+    <p>Not yet. We are exploring technical issues related to building an API.</p>
+    <h2>If you have additional questions or feedback, please send us an
+        <!--<a class="sots-link" href="{{url_for('feedback')}}">feedback</a> page or by -->
+        <a class="sots-link" href="mailto:info@ctdata.org">email</a>.</h2>
 </div>
 {% endblock %}

@@ -419,7 +419,7 @@ tbody tr:hover {
 .table-name {
   padding-left: .75rem;
   margin-left: 3rem;
-  margin-top: .5rem;
+  margin-top: 1.5rem;
   font-weight: bold; }
 
 @media (min-width: 768px) {

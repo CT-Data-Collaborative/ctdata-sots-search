@@ -50,13 +50,26 @@
         </h3>
     </div>
     <div class="col-sm-10 col-lg-7 col-sm-offset-1">
-        <h4>Business data are updated monthly. For the latest, official information about a given business, please consult the
-        CT Secretary of the State's CONCORD <a class="sots-link" href="https://www.concord-sots.ct.gov/CONCORD/" target = "_blank">application</a>.</h4>
-        <h4>To learn more about the data, head over to the <a class="sots-link" href="{{ url_for('technical_details')}}">technical
-            details</a> page.</h4>
+        <h4>
+          Business data are updated weekly.
+          For the latest, official information about a given business,
+          please consult the CT Secretary of the State's CONCORD
+          <a class="sots-link" href="https://www.concord-sots.ct.gov/CONCORD/" target = "_blank">application</a>.
+        </h4>
+
+        <h4>
+          To learn more about the data, head over to the
+            <a class="sots-link" href="{{ url_for('technical_details')}}">technical details</a> page.
+
+          To submit a data request, <a class="sots-link" href="https://www.ctdata.org/sots-request">use this form </a>.
+        </h4>
+
+
+        
+        <!--
         <h4>If you have feedback, suggestions, or requests, please use our <a class="sots-link"
                                                                              href="{{url_for('feedback')}}">feedback</a>
-            page.</h4>
+            page.</h4>-->
     </div>
 </div>
 {% endblock %}
